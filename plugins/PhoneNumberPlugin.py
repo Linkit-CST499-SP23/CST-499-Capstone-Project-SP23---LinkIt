@@ -31,10 +31,10 @@ def ConfidenceScore(elem):
     if (re.search("^\(\d{3}\)\s?\d{3}-\d{4}$", elem)): 
         return 100.00
     # matches '+1555555555' or '+1 555.555.5555' or '+555-555-5555'
-    elif (re.search("^\+1?\s?\d{3}[\.-]?\d{3}[\.-]?\d{4}$", elem)):
+    elif (re.search("^\+1?\s?\d{3}[\.-]\d{3}[\.-]\d{4}$|^\+1\d{10}$", elem)):
         return 80.0
     # matches '555-555-5555' or '555.555.5555' or '1-555-555-5555'
-    elif (re.search("^1?-?\d{3}[\.-]\d{3}[\.-]\d{4}$", elem)):
+    elif (re.search("^(1-)?\d{3}[\.-]\d{3}[\.-]\d{4}$", elem)):
         return 60.0
     # matches '555 555 5555'
     elif (re.search("^\d{3}\s\d{3}\s\d{4}$", elem)):

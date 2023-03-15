@@ -1,7 +1,12 @@
 # CST-499-Capstone-Project-SP23---LinkIt
 LinkIt is a tool that automates the most labor-intensive manual tasks associated with data integration by examining disparate data, rationalizing the schema, and finding natural linkages. LinkIt provides an extensible framework so that the range of data it understands can be expanded over time – perhaps even by non-programmers.
 
-BACKGROUND 
+## Running
+```sh
+python -m LinkIt
+```
+
+## BACKGROUND
 The increasing value of data, data analytics, and machine learning is undeniable. Data is like raw ore that
 can be mined, refined, and used to fuel the economy. Mining and refining real ore is hard and
 the same is true for data, albeit for different reasons. In the case of data, the greatest value is

@@ -9,7 +9,6 @@ class TestIsPhoneNumberCol(unittest.TestCase):
     
     """
     Tests all valid phone number formats.
-    10 valid phone number formats that add up to 680, the average of that is 68.
     """
     def test_valid_phone_number_list(self):
         valid_phone_number_list = ['(212)456-7890', '(212) 456-7890', '+212-456-7890', '+1 212.456.7890',
@@ -19,6 +18,7 @@ class TestIsPhoneNumberCol(unittest.TestCase):
         expected = 68.0 # calculation is (100+100+80+80+80+60+60+60+40+20) / 10
         self.assertEqual(actual, expected)
 
+
     """
     Tests invalid phone number formats.
     """
@@ -27,6 +27,7 @@ class TestIsPhoneNumberCol(unittest.TestCase):
         actual = IsPhoneNumber(invalid_phone_number_list)
         expected = 0.0 
         self.assertEqual(actual, expected)
+
 
     """
     Test each format in each confidence score cateogory individually.
@@ -92,3 +93,24 @@ class TestIsPhoneNumberCol(unittest.TestCase):
         actual = ConfidenceScore('string')
         excepted = 0.0
         self.assertEqual(actual, excepted)
+
+
+    """
+    Tests the RemoveOutlier function.
+    """
+    def test_remove_outlier(self):
+        scores = [100, 100, 100, 100, 100, 0] # 0 is not within 2 standard deviations from the mean
+        actual = RemoveOutliers(scores)
+        expected = [100, 100, 100, 100, 100] 
+        self.assertEqual(actual, expected)
+        
+
+    """
+    Tests the RemoveNull function.
+    """
+    def test_remove_null(self):
+        col = ['(212)456-7890', '(212) 456-7890', None, 'NA', 'N/A', 'na', 'n/a', 'Na', 'N/a'] 
+        actual = RemoveNull(col)
+        expected = ['(212)456-7890', '(212) 456-7890']
+        self.assertEqual(actual, expected)
+        

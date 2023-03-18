@@ -69,8 +69,8 @@ def RemoveNull(col):
 The RemoveOutliers function removes any elements that could be skewing the average
 (elements that are 2 standard deviations away from the mean).
 
-input: int list
-output: int list
+input: double list
+output: double list
 
 """
 def RemoveOutliers(scores):

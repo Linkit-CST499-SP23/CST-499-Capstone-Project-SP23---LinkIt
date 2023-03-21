@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("..")
 
-from plugins.PhoneNumberPlugin import *
+from LinkIt.plugins.PhoneNumberPlugin import *
 
 class TestGetConfidenceScoreCol(unittest.TestCase):
     

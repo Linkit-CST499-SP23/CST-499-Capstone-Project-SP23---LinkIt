@@ -15,10 +15,10 @@ class pluginApi(object):
     pluginList = []
 
     def __init__(self):
-        pluginFiles = os.listdir('plugins')
+        pluginFiles = os.listdir('LinkIt/plugins/')
         for plugin in pluginFiles:
             if not "__" in plugin:
-                importlib.import_module("plugins."+plugin.split('.')[0])
+                importlib.import_module("LinkIt.plugins."+plugin.split('.')[0])
                 self.pluginList.append(plugin.split('.')[0])
 
     def outputPluginList(self):

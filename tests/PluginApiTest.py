@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..")
 
-from pluginApi import *
+from LinkIt.pluginApi import *
 
 #sys.path.insert(0, 'CST-499-Capstone-Project-SP23---LinkIt/pluginApi/pluginApi')
 
@@ -16,8 +16,9 @@ class TestPluginApi(unittest.TestCase):
     def test_plugin_retreival(self):
         test = pluginApi()
         actual = test.getPluginList()
+        print("API TEST discovered plugins:")
         print(test.getPluginList())
-        expected = ["PhoneNumberPlugin"]
+        expected = ['GenericNumberPlugin', 'GenericTextPlugin', 'PhoneNumberPlugin'] # placeholder at the moment
         self.assertListEqual(actual, expected)
   
 

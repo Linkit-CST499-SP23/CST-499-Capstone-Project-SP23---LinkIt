@@ -1,9 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\LinkIt",
     "\\plugins",
     "\\tests"
   ],
-  "SelectedNode": "\\tests\\PluginApiTest.py",
+  "SelectedNode": "\\LinkIt\\main.py",
   "PreviewInSolutionExplorer": false
 }

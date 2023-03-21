@@ -2,7 +2,7 @@ import importlib
 import pkgutil
 import sys
 
-import LinkIt.plugins
+import plugins #removed LinkIt before plugins
 
 def iter_namespace(ns_pkg):
     # Specifying the second argument (prefix) to iter_modules makes the
@@ -16,7 +16,7 @@ def load_plugins():
     discovered_plugins = {
         name: importlib.import_module(name)
         for finder, name, ispkg
-        in iter_namespace(LinkIt.plugins)
+        in iter_namespace(plugins) #removed LinkIt before plugins
     }
     return discovered_plugins
 

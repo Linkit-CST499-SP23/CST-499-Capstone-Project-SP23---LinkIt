@@ -13,19 +13,20 @@ class PluginApi(object):
 
     Attributes
     -----------
-    plugin_list : List
+    plugin_dict : Dictionary
         a list of all the plugins that have been discovered and imported for use
 
     Methods
     ----------
     outputPluginList()
-        prints plugin_list
+        prints plugin_dict
     
     getPluginList()
-        returns plugin_list
+        returns the keys of plugin_dict as a list. Essentially shows the names of 
+        all the plugins that have been 
     """
 
-    plugin_list = []
+    plugin_dict = {}
 
     def __init__(self):
         self.initialize_plugins()
@@ -34,17 +35,23 @@ class PluginApi(object):
         plugin_files = os.listdir('LinkIt/plugins/')
         for plugin in plugin_files:
             if not "__" in plugin:
-                importlib.import_module("LinkIt.plugins."+plugin.split('.')[0])
-                self.plugin_list.append(plugin.split('.')[0])
+                plug_name = plugin[:-3]
+                self.plugin_dict[plug_name] = importlib.import_module("LinkIt.plugins."+plugin[:-3])
+                #self.plugin_dict.append(plugin.split('.')[0])
 
     def output_plugin_list(self):
-        """ prints the plugin_list """
-        for plugin in self.plugin_list:
+        """ prints the plugin_dict """
+        for plugin in self.plugin_dict.keys():
             print(plugin + "\n")
 
     def get_plugin_list(self):
-        """ returns the plugin_list """
-        return self.plugin_list
+        """ returns the keys of plugin_dict """
+        plugin_list = []
+        for key in self.plugin_dict.keys():
+            plugin_list.append(key)
+        return plugin_list
+
+
 
         
 

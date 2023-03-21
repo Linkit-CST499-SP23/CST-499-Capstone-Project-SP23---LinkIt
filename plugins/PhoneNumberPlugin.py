@@ -2,7 +2,7 @@ import re
 
 """
 
-The IsPhoneNumber function takes in a csv column passed in as a list
+The getConfidenceScore() function takes in a csv column passed in as a list
 and returns a confidence score by taking an average
 on how likely each item in the column is a phone number.
 
@@ -10,20 +10,20 @@ input: string list
 output: double
 
 """
-def IsPhoneNumber(col):
+def getConfidenceScore(col):
     scores = []
-    col = RemoveNull(col) 
+    col = removeNull(col) 
 
     for c in col:
-        scores.append(ConfidenceScore(c))
+        scores.append(getElemScore(c))
 
-    scores = RemoveOutliers(scores)
+    scores = removeOutliers(scores)
     return sum(scores) / len(scores)
 
 
 
 """
-The ConfidenceScore function takes one element from the column list
+The getElemScore() function takes one element from the column list
 and returns a confidence score on
 how the element is a phone number.
 
@@ -31,7 +31,7 @@ input: string
 output: double
 
 """
-def ConfidenceScore(elem):
+def getElemScore(elem):
     # matches '(555)555-555' or '(555) 555-5555'
     if (re.search("^\(\d{3}\)\s?\d{3}-\d{4}$", elem)): 
         return 100.00
@@ -52,13 +52,13 @@ def ConfidenceScore(elem):
     
 
 """
-The RemoveNull function removes any null elements that may be in the column list.
+The removeNull() function removes any null elements that may be in the column list.
 
 input: string list
 output: string list
 
 """
-def RemoveNull(col):
+def removeNull(col):
     null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
     col = [elem for elem in col if elem is not None] # remove None values
     col = [elem for elem in col if elem not in null_strings] # remove any strings denoting null values
@@ -66,14 +66,14 @@ def RemoveNull(col):
 
 
 """
-The RemoveOutliers function removes any elements that could be skewing the average
+The removeOutliers() function removes any elements that could be skewing the average
 (elements that are 2 standard deviations away from the mean).
 
 input: double list
 output: double list
 
 """
-def RemoveOutliers(scores):
+def removeOutliers(scores):
     outliers = set()
     avg = sum(scores) / len(scores)
     standard_deviation = (sum([(s - avg)**2 for s in scores]) / len(scores))**(1/2)

@@ -1,32 +1,50 @@
 import os
 import importlib
 
-"""
 
-The goal of the pluginApi object is to gather and initialize plugins that 
-adhere to a basic naming convention / standardization, and to provide 
-useability to the framework to manipulate them.
-
-
-"""
 
 class pluginApi(object):
+    """
 
-    pluginList = []
+    A class that acts as the API between the framework and any plugins within the LinkIt/plugins folder. 
+    Seeks, imports, and provides functionality for the plugins.
+
+    ...
+
+    Attributes
+    -----------
+    plugin_list : List
+        a list of all the plugins that have been discovered and imported for use
+
+    Methods
+    ----------
+    outputPluginList()
+        prints plugin_list
+    
+    getPluginList()
+        returns plugin_list
+    """
+
+    plugin_list = []
 
     def __init__(self):
-        pluginFiles = os.listdir('LinkIt/plugins/')
-        for plugin in pluginFiles:
+        self.initialize_plugins()
+
+    def initialize_plugins(self):
+        plugin_files = os.listdir('LinkIt/plugins/')
+        for plugin in plugin_files:
             if not "__" in plugin:
                 importlib.import_module("LinkIt.plugins."+plugin.split('.')[0])
-                self.pluginList.append(plugin.split('.')[0])
+                self.plugin_list.append(plugin.split('.')[0])
 
-    def outputPluginList(self):
-        for plugin in self.pluginList:
+    def output_plugin_list(self):
+        """ prints the plugin_list """
+        for plugin in self.plugin_list:
             print(plugin + "\n")
 
-    def getPluginList(self):
-        return self.pluginList
+    def get_plugin_list(self):
+        """ returns the plugin_list """
+        return self.plugin_list
 
         
 

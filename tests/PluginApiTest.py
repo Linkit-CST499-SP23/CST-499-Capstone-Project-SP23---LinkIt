@@ -10,14 +10,15 @@ from LinkIt.pluginApi import *
 
 class TestPluginApi(unittest.TestCase):
 
-    """
-    Tests whether the api can import plugins from plugin folder
-    """
+
     def test_plugin_retreival(self):
+        """
+        Tests whether the api can import plugins from plugin folder
+        """
         test = pluginApi()
-        actual = test.getPluginList()
+        actual = test.get_plugin_list()
         print("API TEST discovered plugins:")
-        print(test.getPluginList())
+        print(test.get_plugin_list())
         expected = ['GenericNumberPlugin', 'GenericTextPlugin', 'PhoneNumberPlugin'] # placeholder at the moment
         self.assertListEqual(actual, expected)
   

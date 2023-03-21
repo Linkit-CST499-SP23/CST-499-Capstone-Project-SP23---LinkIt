@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\plugins",
+    "\\tests"
   ],
+  "SelectedNode": "\\tests\\PluginApiTest.py",
   "PreviewInSolutionExplorer": false
 }

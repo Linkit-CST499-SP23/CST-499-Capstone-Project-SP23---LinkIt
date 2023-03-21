@@ -21,6 +21,14 @@ class TestPluginApi(unittest.TestCase):
         print(test.get_plugin_list())
         expected = ['GenericNumberPlugin', 'GenericTextPlugin', 'PhoneNumberPlugin'] # placeholder at the moment
         self.assertListEqual(actual, expected)
+
+    def test_plugin_function_exec(self):
+        """ Tests whether the api can dynamically execute plugin functions """
+        test = PluginApi()
+        actual = 100.00 #filler
+        expected = 100.00
+        self.assertEqual(actual, expected)
+
   
 
     

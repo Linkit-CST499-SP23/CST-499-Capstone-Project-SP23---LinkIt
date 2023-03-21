@@ -14,7 +14,9 @@ class PluginApi(object):
     Attributes
     -----------
     plugin_dict : Dictionary
-        a list of all the plugins that have been discovered and imported for use
+        key = name of plugin
+        value = plugin
+        a dictionary of all the plugins that have been discovered and imported for use
 
     Methods
     ----------
@@ -32,12 +34,19 @@ class PluginApi(object):
         self.initialize_plugins()
 
     def initialize_plugins(self):
-        plugin_files = os.listdir('LinkIt/plugins/')
-        for plugin in plugin_files:
-            if not "__" in plugin:
-                plug_name = plugin[:-3]
-                self.plugin_dict[plug_name] = importlib.import_module("LinkIt.plugins."+plugin[:-3])
-                #self.plugin_dict.append(plugin.split('.')[0])
+        try:
+            plugin_files = os.listdir('LinkIt/plugins/')
+            try:
+                for plugin in plugin_files:
+                    if not "__" in plugin:
+                        plug_name = plugin[:-3]
+                        self.plugin_dict[plug_name] = importlib.import_module("LinkIt.plugins." + 
+                                                                              plugin[:-3])
+            except:
+                print("error importing plugins")
+        except:
+            print("error locating plugins folder or listing contents")
+                
 
     def output_plugin_list(self):
         """ prints the plugin_dict """
@@ -50,6 +59,10 @@ class PluginApi(object):
         for key in self.plugin_dict.keys():
             plugin_list.append(key)
         return plugin_list
+
+    #def eval_column(self, plugin, column):
+
+
 
 
 

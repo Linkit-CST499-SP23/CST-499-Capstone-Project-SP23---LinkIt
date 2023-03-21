@@ -2,7 +2,7 @@ import unittest
 import sys
 sys.path.append("..")
 
-from LinkIt.pluginApi import *
+from LinkIt.PluginApi import *
 
 #sys.path.insert(0, 'CST-499-Capstone-Project-SP23---LinkIt/pluginApi/pluginApi')
 
@@ -15,7 +15,7 @@ class TestPluginApi(unittest.TestCase):
         """
         Tests whether the api can import plugins from plugin folder
         """
-        test = pluginApi()
+        test = PluginApi()
         actual = test.get_plugin_list()
         print("API TEST discovered plugins:")
         print(test.get_plugin_list())

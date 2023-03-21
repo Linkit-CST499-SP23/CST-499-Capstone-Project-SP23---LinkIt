@@ -3,7 +3,7 @@ import importlib
 
 
 
-class pluginApi(object):
+class PluginApi(object):
     """
 
     A class that acts as the API between the framework and any plugins within the LinkIt/plugins folder. 

@@ -34,7 +34,10 @@ class PluginApi(object):
         self.initialize_plugins()
 
     def initialize_plugins(self):
-        """ TODO: add doc. """
+        """ 
+        Searches the LinkIt/plugins/ folder for plugins and imports them for use, as well as
+        adding them to plugin_dict, which allows for calling of their functions dynamically later
+        """
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
             try:
@@ -61,8 +64,13 @@ class PluginApi(object):
             plugin_list.append(key)
         return plugin_list
 
-    #def plugin_confidence(self, plugin, column):
-    #    """ TODO: add doc. """
+    def plugin_confidence(self, plugin, column):
+        """ TODO: add doc. """
+        try:
+            confidence_score = self.plugin_dict[plugin].get_confidence_score(column)
+            return confidence_score
+        except:
+            print("error getting plugin_confidence score from" + plugin)
 
 
 

@@ -34,6 +34,7 @@ class PluginApi(object):
         self.initialize_plugins()
 
     def initialize_plugins(self):
+        """ TODO: add doc. """
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
             try:
@@ -60,7 +61,9 @@ class PluginApi(object):
             plugin_list.append(key)
         return plugin_list
 
-    #def eval_column(self, plugin, column):
+    #def plugin_confidence(self, plugin, column):
+    #    """ TODO: add doc. """
+
 
 
 

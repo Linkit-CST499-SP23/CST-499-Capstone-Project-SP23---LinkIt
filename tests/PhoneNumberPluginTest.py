@@ -14,7 +14,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         validPhoneNumList = ['(212)456-7890', '(212) 456-7890', '+212-456-7890', '+1 212.456.7890',
                                 '+12124567890', '212.456.7890', '1-212-456-7890', '212-456-7890', 
                                 '212 456 7890', '2124567890']
-        actual = getConfidenceScore(validPhoneNumList)
+        actual = get_confidence_score(validPhoneNumList)
         expected = 68.0 # calculation is (100+100+80+80+80+60+60+60+40+20) / 10
         self.assertEqual(actual, expected)
 
@@ -24,7 +24,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     """
     def test_invalid_phone_number_list(self):
         invalidPhoneNumList = ['((212)456-7890', '5555555555555', '-212-456-7890', 'string']
-        actual = getConfidenceScore(invalidPhoneNumList)
+        actual = get_confidence_score(invalidPhoneNumList)
         expected = 0.0 
         self.assertEqual(actual, expected)
 

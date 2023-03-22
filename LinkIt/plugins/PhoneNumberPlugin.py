@@ -10,7 +10,7 @@ input: string list
 output: double
 
 """
-def getConfidenceScore(col):
+def get_confidence_score(col):
     scores = []
     col = removeNull(col) 
 

@@ -32,21 +32,23 @@ output: double
 
 """
 def getElemScore(elem):
+    og_elem_length = len(elem)
+
     # matches '(555)555-555' or '(555) 555-5555'
-    if (re.search("^\(\d{3}\)\s?\d{3}-\d{4}$", elem)): 
-        return 100.00
+    if (match := re.search("\(\d{3}\)\s?\d{3}-\d{4}", elem)) is not None:
+        return 100.00 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))
     # matches '+1555555555' or '+1 555.555.5555' or '+555-555-5555'
-    elif (re.search("^\+1?\s?\d{3}[\.-]\d{3}[\.-]\d{4}$|^\+1\d{10}$", elem)):
-        return 80.0
+    elif (match := re.search("(\+1?\s?\d{3}[\.-]\d{3}[\.-]\d{4})|(\+1\d{10})", elem)) is not None:
+        return 80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))
     # matches '555-555-5555' or '555.555.5555' or '1-555-555-5555'
-    elif (re.search("^(1-)?\d{3}[\.-]\d{3}[\.-]\d{4}$", elem)):
-        return 60.0
+    elif (match := re.search("(1-\d{3}-\d{3}-\d{4})|(\d{3}[\.-]\d{3}[\.-]\d{4})", elem)) is not None:
+        return 60.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))
     # matches '555 555 5555'
-    elif (re.search("^\d{3}\s\d{3}\s\d{4}$", elem)):
-        return 40.0
+    elif (match := re.search("\d{3}\s\d{3}\s\d{4}", elem)) is not None:
+        return 40.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))
     # matches '5555555555'
-    elif (re.search("^\d{10}$", elem)):
-        return 20.0
+    elif (match := re.search("\d{10}", elem)) is not None:
+        return 20.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))
     else:
         return 0.0
     
@@ -62,6 +64,18 @@ def removeNull(col):
     null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
     col = [elem for elem in col if elem is not None] # remove None values
     col = [elem for elem in col if elem not in null_strings] # remove any strings denoting null values
+    return col
+
+
+"""
+The removeLeadTrailSpace() function removes any leading and trailing spaces that may be in the strings of the column list.
+
+input: string list
+output: string list
+
+"""
+def removeLeadTrailSpace(col):
+    col = [elem.strip() for elem in col] # remove leading and trailing spaces
     return col
 
 

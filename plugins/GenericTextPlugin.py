@@ -32,9 +32,13 @@ output: double
 
 """
 def get_elem_score(elem):
-   #TODO: rework regex
    if (re.search("[a-zA-Z]", elem)):
-       return 100.0
+       num_time_indicators = len(re.findall('AST|ADT|EST|EDT|CST|CDT|PST|PDT|AKST|AKDT|HST|HDT|UTC|PM|AM', elem))
+       num_date_month_indicators = len(re.findall('JAN|FEB|MARCH|APRIL|MAY|JUNE|JULY|AUG|SEPT|OCT|NOV|DEC\
+                                                  |Jan|Feb|March|April|May|June|July|Aug|Sept|Oct|Nov|Dec', elem)) 
+       num_date_day_indicators = len(re.findall('MON|TUES|WED|THURS|FRI|SAT|SUN\
+                                                |Mon|Tues|Wed|Thurs|Fri|Sat|Sun', elem)) 
+       return 100.0 - (2.0 * (num_time_indicators + num_date_month_indicators + num_date_day_indicators))
    else:
        return 0.0
     

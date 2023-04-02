@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("..")
 
-from plugins.GenericNumberPlugin import *
+from LinkIt.plugins.GenericNumberPlugin import *
 
 class TestGetConfidenceScoreCol(unittest.TestCase):
     

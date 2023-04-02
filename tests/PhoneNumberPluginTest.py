@@ -173,7 +173,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
 
 
     """
-    Tests the removeOutlier() function.
+    Tests the remove_outliers() function.
     """
     def test_remove_outlier(self):
         scores = [100, 100, 100, 100, 100, 0] # 0 is not within 2 standard deviations from the mean

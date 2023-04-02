@@ -12,6 +12,7 @@ output: double
 """
 def get_confidence_score(col):
     scores = []
+    col = remove_lead_trail_space(col)
     col = remove_null(col) 
 
     for c in col:

@@ -1,7 +1,5 @@
-
-#Framework needs to find plugins and dynamily looad them
-
 import csv
+from plugin_api import PluginApi
 
 def read_csv_file(filename):
     """
@@ -14,25 +12,18 @@ def read_csv_file(filename):
         column_data = [row[column_name] for row in reader]
         return (column_name, column_data)
 
-def analyze_data(column_name, column_data, plugin):
+def analyze_data(column_name, column_data):
     """
-    Passes the specified column data to a data analysis plugin.
+    Passes the specified column data to all available data analysis plugins.
     """
-    plugin.analyze_data(column_name, column_data)
-
-class DataAnalysisPlugin:
-    """
-    Example data analysis plugin class that can be used with the `analyze_data` function.
-    """
-    def analyze_data(self, column_name, column_data):
-        """
-        Example data analysis method that simply prints out the column data and its name.
-        """
-        print(f"Column Name: {column_name}")
-        print(f"Column Data: {column_data}")
+    plugin_api = PluginApi()
+    confidence_scores = plugin_api.analyze_column(column_data)
+    print(f"Column Name: {column_name}")
+    print(f"Confidence Scores: {confidence_scores}")
 
 # Example usage
 filename = 'example.csv'
-plugin = DataAnalysisPlugin()
 column_name, column_data = read_csv_file(filename)
-analyze_data(column_name, column_data, plugin)
+analyze_data(column_name, column_data)
+
+#Note that this assumes that all available plugins in the LinkIt/plugins folder are compatible with the get_confidence_score method as defined in the PluginApi class.

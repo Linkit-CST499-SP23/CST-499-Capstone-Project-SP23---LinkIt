@@ -2,20 +2,20 @@ import re
 
 """
 
-The get_confidence_score() function takes in a csv column passed in as a list
-and returns a confidence score by taking an average
+The get_confidence_score() function takes in a csv column name and column values 
+passed in as a list and returns a confidence score by taking an average
 on how likely each item in the column is of generic number type.
 
-input: string list
+input: string, string list
 output: double
 
 """
-def get_confidence_score(col):
+def get_confidence_score(col_name, col_vals):
     scores = []
-    col = remove_lead_trail_space(col)
-    col = remove_null(col) 
+    col_vals = remove_lead_trail_space(col_vals)
+    col_vals = remove_null(col_vals) 
 
-    for c in col:
+    for c in col_vals:
         scores.append(get_elem_score(c))
     scores = remove_outliers(scores)
     return sum(scores) / len(scores)
@@ -48,11 +48,11 @@ input: string list
 output: string list
 
 """
-def remove_null(col):
+def remove_null(col_vals):
     null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
-    col = [elem for elem in col if elem is not None] # remove None values
-    col = [elem for elem in col if elem not in null_strings] # remove any strings denoting null values
-    return col
+    col_vals = [elem for elem in col_vals if elem is not None] # remove None values
+    col_vals = [elem for elem in col_vals if elem not in null_strings] # remove any strings denoting null values
+    return col_vals
 
 
 """
@@ -62,9 +62,9 @@ input: string list
 output: string list
 
 """
-def remove_lead_trail_space(col):
-    col = [elem.strip() for elem in col] # remove leading and trailing spaces
-    return col
+def remove_lead_trail_space(col_vals):
+    col_vals = [elem.strip() for elem in col_vals] # remove leading and trailing spaces
+    return col_vals
 
 
 """

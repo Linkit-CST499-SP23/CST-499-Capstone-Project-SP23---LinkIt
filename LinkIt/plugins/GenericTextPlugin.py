@@ -2,19 +2,19 @@ import re
 
 """
 
-The get_confidence_score() function takes in a csv column passed in as a list
-and returns a confidence score by taking an average
+The get_confidence_score() function takes in a csv column name and column values 
+passed in as a list and returns a confidence score by taking an average
 on how likely each item in the column is of generic text type.
 
-input: string list
+input: string, string list
 output: double
 
 """
-def get_confidence_score(col):
+def get_confidence_score(col_name, col_vals):
     scores = []
-    col = remove_null(col) 
+    col_vals = remove_null(col_vals) 
 
-    for c in col:
+    for c in col_vals:
         scores.append(get_elem_score(c))
 
     scores = remove_outliers(scores)
@@ -50,9 +50,9 @@ input: string list
 output: string list
 
 """
-def remove_null(col):
-    col = [elem for elem in col if elem is not None] # remove None values
-    return col
+def remove_null(col_vals):
+    col_vals = [elem for elem in col_vals if elem is not None] # remove None values
+    return col_vals
 
 
 """

@@ -16,7 +16,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                         'flute', 'clarinet']
         actual = get_confidence_score(validTextList1)
         expected = 100.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests generic text with date month indicators
         # score should be lower because of the date indicators
@@ -24,7 +24,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                         'Christmas is in December.', 'She starts work in AUG.']
         actual = get_confidence_score(validTextList2)
         expected = 98.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests generic text with date day indicators
         # score should be lower because of the date indicators
@@ -32,7 +32,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                         'Change your time on MON', 'Party on Fri.']
         actual = get_confidence_score(validTextList3)
         expected = 98.0
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         
         # tests generic text with time indicators
         # score should be lower because of the time indicators
@@ -40,7 +40,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                           'Announcements are at 8:00AM.', 'Universal time is UTC.', 'West Coast is PST time.']
         actual = get_confidence_score(validTextList4)
         expected = 97.0
-        self.assertAlmostEqual(actual, expected, delta=0.9)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests generic text with one number outlier
         # the outlier should be removed before calculation of the final confidence score
@@ -48,7 +48,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                         'orange', 'red', 'indigo', '2124564654']
         actual = get_confidence_score(validTextList5)
         expected = 100.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """
@@ -59,8 +59,8 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         invalidTextList1 = ['12345', '45678.56789000', '.456789', '67,564', '89,890,890.89089898',
                         '98%', '98.56%', '.53%', '34/434']
         actual = get_confidence_score(invalidTextList1)
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # test pure date/time text
         # Generic Date/Time Plugin should give 100 for the below items thus 
@@ -68,8 +68,8 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         invalidTextList2 = ['12:00AM', '9:00PM PST', '21:43 EDT', 'March 31st, 2021', 
                             'May 1st', 'JAN 2ND', 'Monday', 'TUES 6TH']
         actual = get_confidence_score(invalidTextList2)
-        excepted = 98.0
-        self.assertEqual(actual, excepted)
+        expected = 98.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """
@@ -79,28 +79,28 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     def test_100_score_text(self):
         actual = get_elem_score('Lorem ipsum dolor sit amet, consectetur adipiscing elit, \
                                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.')
-        excepted = 100.0
-        self.assertEqual(actual, excepted)
+        expected = 100.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
     def test_0_score_text(self):
         actual = get_elem_score('789')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('.789')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('98.98')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('123,456.09')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('67.87%')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('45/45')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """

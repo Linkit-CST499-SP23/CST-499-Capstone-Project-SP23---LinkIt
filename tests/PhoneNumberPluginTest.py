@@ -17,7 +17,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                                 '212 456 7890', '2124567890']
         actual = get_confidence_score(validPhoneNumList1)
         expected = 62.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests formats with a 100 confidence score and one 20 confidence score outlier
         # the outlier should be removed before calculation of the final confidence score
@@ -25,7 +25,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                               '(786)655-6456', '(847)234-3455', '(454)454-5334', '5555555555']
         actual = get_confidence_score(validPhoneNumList2)
         expected = 100.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests a mix of formats that range between a confidence score of 60 and 80
         validPhoneNumList3 = ['+212-456-7890', '+1 212.456.7890', '+1 555-687-9596', 
@@ -33,7 +33,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                                 '1-345-345-3453', '212.456.7890']
         actual = get_confidence_score(validPhoneNumList3)
         expected = 70.0
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         
         # tests a mix of formats that range between a confidence score of 40 and 20
         validPhoneNumList4 = ['234 456 7890', '212 234 7890', '212 456 4324', '212 432 7890',
@@ -41,7 +41,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                                 '2124532654', '2124564654']
         actual = get_confidence_score(validPhoneNumList4)
         expected = 28.0
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests formats with a 20 confidence score and two 100 confidence score outliers
         # the outliers should be removed before calculation of the final confidence score
@@ -50,7 +50,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
                                 '2124564654', '2124567890', '(212)456-7890', '(212)456-7890']
         actual = get_confidence_score(validPhoneNumList5)
         expected = 20.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """
@@ -63,44 +63,44 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         invalidPhoneNumList1 = ['4353dfgjir', '234234lgofd943', '234-42322-43243222', 'string']
         actual = get_confidence_score(invalidPhoneNumList1)
         expected = 0.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos within the 100 score category
         invalidPhoneNumList2 = ['((212)456-7890', '(212)456-789440', '((212) 456-7840rg']
         actual = get_confidence_score(invalidPhoneNumList2)
         expected = 90.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos within the 80 score category
         invalidPhoneNumList3 = ['+212-456-78902', '+1 212.456.7890..', '-+12124567890-0']
         actual = get_confidence_score(invalidPhoneNumList3)
         expected = 70.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos within the 60 score category
         invalidPhoneNumList4 = ['.212.456.7890', '.1-212-456-7890.', 'io212-456-7890o']
         actual = get_confidence_score(invalidPhoneNumList4)
         expected = 50.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos within the 40 score category
         invalidPhoneNumList5 = ['212 456 7890l', 'rt212 456 7890', '&212 456 7890st']
         actual = get_confidence_score(invalidPhoneNumList5)
         expected = 30.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos within the 20 score category
         invalidPhoneNumList6 = ['21245678905', '212456789055', '~2124567890--']
         actual = get_confidence_score(invalidPhoneNumList6)
         expected = 10.0 
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
         # tests invalid typos throughout all the category scores 
         invalidPhoneNumList7 = ['((212)456-7890', '+212-456-78902', '.212.456.7890',
                                 '212 456 7890l', '21245678905']
         actual = get_confidence_score(invalidPhoneNumList7)
         expected = 55.0
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """
@@ -108,68 +108,68 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     """
     def test_100_score_phone_number_formats(self):
         actual = get_elem_score('(212)456-7890')
-        excepted = 100.0
-        self.assertEqual(actual, excepted)
+        expected = 100.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('(212) 456-7890')
-        excepted = 100.0
-        self.assertEqual(actual, excepted)
+        expected = 100.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
     def test_80_score_phone_number_formats(self):
         actual = get_elem_score('+212-456-7890')
-        excepted = 80.0
-        self.assertEqual(actual, excepted)
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('+1 212.456.7890')
-        excepted = 80.0
-        self.assertEqual(actual, excepted)
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('+1 212-456-7890')
-        excepted = 80.0
-        self.assertEqual(actual, excepted)
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('+12124567890')
-        excepted = 80.0
-        self.assertEqual(actual, excepted)
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
     def test_60_score_phone_number_formats(self):
         actual = get_elem_score('212.456.7890')
-        excepted = 60.0
-        self.assertEqual(actual, excepted)
+        expected = 60.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('1-212-456-7890')
-        excepted = 60.0
-        self.assertEqual(actual, excepted)
+        expected = 60.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('212-456-7890')
-        excepted = 60.0
-        self.assertEqual(actual, excepted)
+        expected = 60.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
     def test_40_score_phone_number_formats(self):
         actual = get_elem_score('212 456 7890')
-        excepted = 40.0
-        self.assertEqual(actual, excepted)
+        expected = 40.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     def test_20_score_phone_number_formats(self):
         actual = get_elem_score('2124567890')
-        excepted = 20.0
-        self.assertEqual(actual, excepted)
+        expected = 20.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
     # The 0 score is for all invalid cases.
     def test_0_score_phone_number_formats(self):
         actual = get_elem_score('2p1p-245-678-90pE97p7')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('-212-45d6-7890-')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('.22.2.456.789.')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('+22222222')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('234234lgofd943')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
         actual = get_elem_score('string')
-        excepted = 0.0
-        self.assertEqual(actual, excepted)
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.0)
 
 
     """

@@ -1,19 +1,22 @@
 import re
 import math
 
-def get_confidence_score(col_list):      
+def get_confidence_score(col_name, col_list):      
     scores = []
     col = remove_null(col_list)
     
     
     for c in col:
-        scores.append(get_elam_score(c))
+        scores.append(get_elem_score(c))
 
     scores = remove_outliers(scores)
     confidence_score = math.floor(sum(scores) / len(scores))
+    # matches possible column names case insensitive
+    if re.match(r'\b(?:url|link\s*(?:s)?|website\s*(?:s)?|web\s*address(?:es)?|urls?|site\s*URL\s*(?:s)?|hyperlink\s*(?:s)?|web\s+site)(?:s)?\b', col_name):
+        confidence_score += 10
     return confidence_score     
 
-def get_elam_score(string):
+def get_elem_score(string):
     
     # matches URLs that begin "http", "https", "ftp"
     if re.match(r'^(https?|ftp|sftp|file|mailto|tel|sms|data):\/\/', string):
@@ -54,7 +57,3 @@ def remove_outliers(scores):
     scores = [s for s in scores if s not in outliers]
     return scores
 
-validPhoneNumList = ['https://www.test.com', 'http://www.example.com', 'example.com', 'sub.domain.example.ca/path/to/page?param=value#section',
-                                'www.example.org', 'blog.example.xyz/path/to/post', 'pop.example.ac', 'www.example.ai#section', 
-                                '192.168.0.100', 'mydomain.museum', '.example.com']
-print(get_confidence_score(validPhoneNumList))

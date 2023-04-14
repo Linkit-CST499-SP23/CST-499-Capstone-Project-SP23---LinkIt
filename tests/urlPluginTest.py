@@ -8,6 +8,7 @@ class TestGetConfidenceScore(unittest.TestCase):
     
     def test_get_confidence_score(self):
         # Test input list with various types of strings
+        input_name = 'links'
         input_list = [
             'https://www.test.com',
             'http://www.example.com',
@@ -23,14 +24,14 @@ class TestGetConfidenceScore(unittest.TestCase):
         ]
         
         # Expected confidence score for the above input list
-        expected_score = 71.0
+        expected_score = 81.0
         
         # Call the function and check the result
-        self.assertEqual(get_confidence_score(input_list), expected_score)
+        self.assertEqual(get_confidence_score(input_name, input_list), expected_score)
     
     
     
-    def test_get_elam_score(self):
+    def test_get_elem_score(self):
         # Test various types of input strings
         input_string1 = 'https://www.test.com'
         expected_score1 = 100.0
@@ -46,12 +47,12 @@ class TestGetConfidenceScore(unittest.TestCase):
         expected_score6 = 0.0
         
         # Call the function for each input string and check the result
-        self.assertEqual(get_elam_score(input_string1), expected_score1)
-        self.assertEqual(get_elam_score(input_string2), expected_score2)
-        self.assertEqual(get_elam_score(input_string3), expected_score3)
-        self.assertEqual(get_elam_score(input_string4), expected_score4)
-        self.assertEqual(get_elam_score(input_string5), expected_score5)
-        self.assertEqual(get_elam_score(input_string6), expected_score6)
+        self.assertEqual(get_elem_score(input_string1), expected_score1)
+        self.assertEqual(get_elem_score(input_string2), expected_score2)
+        self.assertEqual(get_elem_score(input_string3), expected_score3)
+        self.assertEqual(get_elem_score(input_string4), expected_score4)
+        self.assertEqual(get_elem_score(input_string5), expected_score5)
+        self.assertEqual(get_elem_score(input_string6), expected_score6)
 
 if __name__ == '__main__':
     unittest.main()

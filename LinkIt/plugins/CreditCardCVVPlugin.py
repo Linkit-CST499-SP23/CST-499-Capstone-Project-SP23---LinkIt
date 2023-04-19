@@ -11,7 +11,7 @@ output: double
 
 """
 def get_confidence_score(col_name, col_vals):
-    col_name_check= ("phone" in col_name.lower())
+    col_name_check= ("cvv" in col_name.lower() or "credit" in col_name.lower() or "card" in col_name.lower())
 
     scores = []
     col_vals = remove_lead_trail_space(col_vals)
@@ -27,37 +27,23 @@ def get_confidence_score(col_name, col_vals):
 
 """
 The get_elem_score() function takes in a boolean denoting
-whether 'phone' was found in the column name and 
+whether 'credit', 'card', or 'cvv' was found in the column name and 
 one element from the column list and returns a confidence score on
-how the element is a phone number.
+how the element is a credit card cvv.
 
 input: bool, string
 output: double
 
 """
 def get_elem_score(col_name_check, elem):
-    og_elem_length = len(elem)
 
     if col_name_check:
-        score_boost = 1.1
+        score_multiplier = 1.0
     else:
-        score_boost = 1.0
+        score_multiplier = 0.5
 
-    # matches '(555)555-555' or '(555) 555-5555'
-    if (match := re.search("\(\d{3}\)\s?\d{3}-\d{4}", elem)) is not None:
-        return (100.00 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
-    # matches '+1555555555' or '+1 555.555.5555' or '+555-555-5555'
-    elif (match := re.search("(\+1?\s?\d{3}[\.-]\d{3}[\.-]\d{4})|(\+1\d{10})", elem)) is not None:
-        return (80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
-    # matches '555-555-5555' or '555.555.5555' or '1-555-555-5555'
-    elif (match := re.search("(1-\d{3}-\d{3}-\d{4})|(\d{3}[\.-]\d{3}[\.-]\d{4})", elem)) is not None:
-        return (60.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
-    # matches '555 555 5555'
-    elif (match := re.search("\d{3}\s\d{3}\s\d{4}", elem)) is not None:
-        return (40.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
-    # matches '5555555555'
-    elif (match := re.search("\d{10}", elem)) is not None:
-        return (20.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
+    if (re.fullmatch("\d{3}|\d{4}", elem)):
+        return 100.00 * score_multiplier
     else:
         return 0.0
     

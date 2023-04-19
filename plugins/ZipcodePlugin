@@ -1,7 +1,8 @@
-import pandas as pd
+
 from opencage.geocoder import OpenCageGeocode
 import re
-
+import os 
+import statistics
 """
 The get_confidence_score() function takes in column name as a string value
 and a csv column as a list and returns a confidence score on how likely each value 
@@ -11,15 +12,31 @@ The plugin calculates the score using three parameters:
 column name, format of value passed and external api
 
 input: string list, string value
-output: double
+output: double 
 
+different test cases:
+
+colname maybe = "zip", "postal"
+colname right= "zip code", "postal code", "zipcode" ,"zipcode" 
+
+format right colname right- 100
+format right colname maybe - 100
+formart right colname no - check api
+format no colname right- check api
+format no colname maybe- check api
+format no col name no - 0%
+
+if colcheck_2 is true colcheck_1 will automatically be true
+if colcheck_2 is true but colckeck_1 is false - ambiguity/edge case
+ 
 """
 
 def get_confidence_score(col_name, col_values):
      
      #column name check
-     colname_check= ("zip" in col_name.lower() or "postal" in col_name.lower())
-    
+     colcheck_1= ("zipcode" in col_name.lower() or "zip code" in col_name.lower() or "postalcode" in col_name.lower() or "postalcode" in col_name.lower())
+     colcheck_2= ("zip" in col_name.lower() or "postal" in col_name.lower())
+
      #Remove null values
      col_values= remove_null(col_values)
      #Remove spaces
@@ -31,22 +48,29 @@ def get_confidence_score(col_name, col_values):
         format_check, api_check= None, None
         format_check= get_format(c)
 
-        if colname_check==True and format_check==True:
+        if format_check and (colcheck_1 or colcheck_2):
             scores.append(100)
-        if colname_check==True and format_check==False:
-            scores.append(80)
-        if (colname_check==False and format_check==True) or (colname_check==False and format_check==False):
-           
+
+        if format_check and not (colcheck_1 or colcheck_2):
             api_check= get_api_value(c)
             if api_check==True:
                 scores.append(100)
             else:
                 scores.append(0)
-
+        if not format_check and (colcheck_1 or colcheck_2):
+            api_check= get_api_value(c)
+            if api_check==True:
+                scores.append(100)
+            else:
+                scores.append(0)
+        if not format_check and not (colcheck_1 or colcheck_2):
+            scores.append(0)
+    
      if scores:
-        return round(sum(scores) / len(scores), 2)
+        print(scores)
+        return float(statistics.median(scores))
      else:
-        return 0
+        return 0.0
      
 def remove_null(col_values):
      null_values= ["", "NAN", "NaN","nan", "Null", None, "NA", "N/A", "na","n/a", "null", "NULL", ]
@@ -57,6 +81,7 @@ def remove_spaces(col_values):
     col_values = [elem.strip() for elem in col_values] 
     return col_values
 
+
 def get_format(c):
     if (re.match(r"^\d{5}$", c) is not None or re.match(r"^\d{5}-\d{4}$", c) is not None):
         return True
@@ -64,7 +89,8 @@ def get_format(c):
         return False
     
 def get_api_value(c):
-    api_key = 'ca67f22d408f4d19b4f9cd066db274be'
+    
+    api_key = os.environ.get('OPENCAGE_API_KEY')
     geocoder = OpenCageGeocode(api_key)
     api_result=''
 

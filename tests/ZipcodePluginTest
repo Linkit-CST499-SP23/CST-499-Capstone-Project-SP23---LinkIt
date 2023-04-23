@@ -1,5 +1,9 @@
 import unittest
-from plugins.ZipcodePlugin import *
+
+import sys
+sys.path.append("..")
+
+from LinkIt.plugins.ZipcodePlugin import *
 
 class TestGetConfidenceScore(unittest.TestCase):
 

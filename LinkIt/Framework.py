@@ -16,10 +16,15 @@ def read_csv_file(filename):
     """
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
-        headers = reader.fieldnames
-        column_name = headers[0]  # Assumes the column to extract is the first column
-        column_data = [row[column_name] for row in reader]
-        return column_name, column_data #not sure if this returns one or multiple columns
+        # Andrew: reader is a dict, [fieldname (default 1st row's values)]:[row data. without a loop of some kind, most efficient to just return
+        # the dict and sort it out
+
+        #headers = reader.fieldnames
+        #column_name = headers[0]  # Assumes the column to extract is the first column
+        #column_data = [row[column_name] for row in reader]
+        #return column_name, column_data #not sure if this returns one or multiple columns
+        return reader
+
 
 
 

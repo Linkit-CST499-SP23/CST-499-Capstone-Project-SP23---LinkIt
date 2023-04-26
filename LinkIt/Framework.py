@@ -28,6 +28,8 @@ def read_csv_file(filename):
 
 
 
+    # Andrew: this will only do one column as far as I can tell? you need to add a loop of some 
+    # kind. Also, probably a seperate func. for finding the best plugin.
 
                        #or could take a dictionary containg these 
 def create_catalog(confidence_scores, column_name, column_data, plugin_name):
@@ -91,7 +93,11 @@ def start_linkit():
             #reading files
             dict_values = read_csv_file(filename.strip())
             #running data analysis 
-            analyzed_csv_data = analyze_data(dict_values)
+            raw_analyzed_csv_data = analyze_data(dict_values)
+            # Andrew: Should probably make a seperate function for selecting the best plugin
+            # and then pass the col_name, best plugin, its conf score, and the data 
+            # analyzed_csv_data = find_best_guess(analyzed_csv_data)
+
             #populating output catalog
             create_catalog(*analyzed_csv_data, plugin_name="example_plugin")
 

@@ -1,5 +1,6 @@
 import csv
 import importlib
+import PluginApi
 
 
 # need API analyze_column method to be updated so it takes column name and returns it 
@@ -16,8 +17,8 @@ def read_csv_file(filename):
     """
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
-        # Andrew: reader is a dict, [fieldname (default 1st row's values)]:[row data. without a loop of some kind, most efficient to just return
-        # the dict and sort it out
+        # Andrew: reader is a dict, [fieldname (default 1st row's values)]:[row data]. Without
+        # a loop of some kind, most efficient to just return the dict and sort it out later.
 
         #headers = reader.fieldnames
         #column_name = headers[0]  # Assumes the column to extract is the first column
@@ -63,7 +64,10 @@ def create_catalog(confidence_scores, column_name, column_data, plugin_name):
         writer.writerow([column_name, column_data, best_plugin, is_generic, best_confidence_score])
 
 
-def analyze_data(column_name,column_data):
+def analyze_data(dict_values):
+    api = PluginApi()
+    for row in dict_values:
+
     
     #run analyze_column from API for every column in csv file
 
@@ -82,9 +86,9 @@ def start_linkit():
     for filename in filenames:
         try:
             #reading files
-            column_name, column_data = read_csv_file(filename.strip())
+            dict_values = read_csv_file(filename.strip())
             #running data analysis 
-            analyzed_csv_data = analyze_data(column_name, column_data)
+            analyzed_csv_data = analyze_data(dict_values)
             #populating output catalog
             create_catalog(*analyzed_csv_data, plugin_name="example_plugin")
 

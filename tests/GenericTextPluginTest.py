@@ -56,19 +56,25 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     """
     def test_invalid_number_list(self):
         # test generic numbers
-        invalidTextList1 = ['12345', '45678.56789000', '.456789', '67,564', '89,890,890.89089898',
+        invalidTextList = ['12345', '45678.56789000', '.456789', '67,564', '89,890,890.89089898',
                         '98%', '98.56%', '.53%', '34/434']
-        actual = get_confidence_score("", invalidTextList1)
+        actual = get_confidence_score("", invalidTextList)
         expected = 0.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
         # test pure date/time text
         # Generic Date/Time Plugin should give 100 for the below items thus 
         # this plugin needs give just needs to be below 100
-        invalidTextList2 = ['12:00AM', '9:00PM PST', '21:43 EDT', 'March 31st, 2021', 
+        invalidTextList = ['12:00AM', '9:00PM PST', '21:43 EDT', 'March 31st, 2021', 
                             'May 1st', 'JAN 2ND', 'Monday', 'TUES 6TH']
-        actual = get_confidence_score("", invalidTextList2)
+        actual = get_confidence_score("", invalidTextList)
         expected = 98.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+
+        # test empty list
+        invalidTextList = []
+        actual = get_confidence_score("", invalidTextList)
+        expected = 0.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
 

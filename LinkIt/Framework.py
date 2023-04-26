@@ -65,15 +65,18 @@ def create_catalog(confidence_scores, column_name, column_data, plugin_name):
 
 
 def analyze_data(dict_values):
+    column_names = dict_values.keys()
     api = PluginApi()
+    dict_results = {}
+    # run analyze_column from API for every column in csv file
     for row in dict_values:
+        conf_score = api.analyze_column(column_names[row], 
+                                        dict_values[column_names[row]])
+        dict_results.update({column_names[row], conf_score, 
+                             dict_values[column_names[row]]})
 
-    
-    #run analyze_column from API for every column in csv file
-
-    #return dictionary of colunm names, plugin names, confidence scores, and column data
-
-    #send data to create catalog
+    # return dict of column names, {plugin names, confidence scores}, and column data
+    return dict_results
 
 
 def start_linkit():

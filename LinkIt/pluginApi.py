@@ -66,7 +66,7 @@ class PluginApi(object):
             print("error locating plugins folder or listing contents")
            
             
-    def plugin_confidence(self, plugin, column):
+    def plugin_confidence(self, plugin, column_name, column):
         """ 
         retrieves a confidence score from a plugin for a column of data
         
@@ -78,13 +78,13 @@ class PluginApi(object):
             the column of data being scanned
         """
         try:
-            confidence_score = self.plugin_dict[plugin].get_confidence_score(column)
+            confidence_score = self.plugin_dict[plugin].get_confidence_score(column_name, column)
             return confidence_score
         except:
             print("error getting plugin_confidence score from" + str(plugin))
 
 
-    def analyze_column(self, column):
+    def analyze_column(self, column_name, column):
         """
         Runs all plugins on a column and returns a dict with the confidence 
         scores and plugin's names
@@ -102,7 +102,7 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
-            confidence_score = self.plugin_confidence(plugin, column)
+            confidence_score = self.plugin_confidence(plugin, column_name, column)
             confidence_scores.update({confidence_score: plugin})
         print(confidence_scores) #ONLY HERE FOR TESTING
         return confidence_scores

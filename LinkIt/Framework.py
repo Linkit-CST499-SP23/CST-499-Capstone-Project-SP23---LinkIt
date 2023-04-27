@@ -1,6 +1,7 @@
 import csv
 import importlib
-import PluginApi
+import pluginApi
+from collections import defaultdict
 
 
 # need API analyze_column method to be updated so it takes column name and returns it 
@@ -15,16 +16,28 @@ def read_csv_file(filename):
     """
     Reads in a CSV file and returns a list containing the specified column data and its name.
     """
-    with open(filename, 'r') as csv_file:
-        reader = csv.DictReader(csv_file)
+
+    columns = defaultdict(list) # each value in each column is appended to a list
+    with open("LinkIt/csv/" + filename, 'r') as csv_file:
+        
+        reader = csv.DictReader(csv_file) # read rows into a dictionary format
+        for row in reader: # read a row as {column1: value1, column2: value2,...}
+            for (key,value) in row.items(): # go over each column name and value 
+                columns[key].append(value) # append the value into the appropriate list
+                                 # based on column name k
+        
+
         # Andrew: reader is a dict {fieldname (default 1st row's values):row data}. Without
         # a loop of some kind, most efficient to just return the dict and sort it out later.
-
+        #csv_values = {}
         #headers = reader.fieldnames
+        #for row in reader:
+        #    csv_values.update({header:reader[header]})
+
         #column_name = headers[0]  # Assumes the column to extract is the first column
         #column_data = [row[column_name] for row in reader]
         #return column_name, column_data #not sure if this returns one or multiple columns
-        return reader
+        return columns
 
 
 
@@ -49,7 +62,7 @@ def create_catalog(column_guesses, column_data):
 
 def analyze_data(dict_values):
     column_names = dict_values.keys()
-    api = PluginApi()
+    api = pluginApi()
     dict_results = {}
     # Andrew: run analyze_column from API for every column in csv file
     for row in dict_values:
@@ -114,14 +127,26 @@ def start_linkit():
             #reading files
             dict_values = read_csv_file(filename.strip()) #TO DO: only take sample of data
 
+            #debug
+            print("csv read...")
+
             #running plugin analysis 
             confidence_scores = analyze_data(dict_values)
+
+            #debug
+            print("confidence scores recieved...")
 
             # Andrew: made a seperate function for selecting the best plugin 
             column_guesses = column_find_best_guess(confidence_scores)
 
+            #debug
+            print("scores analyzed...")
+
             # populating output catalog with best guesses and sample data
             create_catalog(column_guesses, dict_values)
+
+            #debug
+            print("catalogue created...")
 
         except FileNotFoundError:
             print("File not found:", filename.strip())

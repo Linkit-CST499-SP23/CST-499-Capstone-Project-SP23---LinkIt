@@ -29,7 +29,7 @@ def read_csv_file(filename):
 
 
     # Andrew: this will only do one column as far as I can tell? you need to add a loop of some 
-    # kind. Also, probably a seperate func. for finding the best plugin.
+    # kind. Also, probably a seperate func for finding the best plugin.
 
                        #or could take a dictionary containg these 
 def create_catalog(confidence_scores, column_name, column_data, plugin_name):
@@ -74,10 +74,9 @@ def analyze_data(dict_values):
     for row in dict_values:
         conf_score = api.analyze_column(column_names[row], 
                                         dict_values[column_names[row]])
-        dict_results.update({column_names[row], conf_score, 
-                             dict_values[column_names[row]]})
+        dict_results.update({column_names[row], conf_score})
 
-    # return dict of column names, {plugin names, confidence scores}, and column data
+    # return dict {column name: {plugin names, confidence scores}}
     return dict_results
 
 
@@ -91,9 +90,11 @@ def start_linkit():
     for filename in filenames:
         try:
             #reading files
-            dict_values = read_csv_file(filename.strip())
-            #running data analysis 
+            dict_values = read_csv_file(filename.strip()) #TO DO: only take sample of data
+
+            #running plugin analysis 
             raw_analyzed_csv_data = analyze_data(dict_values)
+
             # Andrew: Should probably make a seperate function for selecting the best plugin
             # and then pass the col_name, best plugin, its conf score, and the data 
             # analyzed_csv_data = find_best_guess(analyzed_csv_data)

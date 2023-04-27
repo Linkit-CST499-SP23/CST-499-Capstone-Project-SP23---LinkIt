@@ -74,6 +74,12 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 0.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
+        # test empty list
+        invalidExpirationDateList = []
+        actual = get_confidence_score("", invalidExpirationDateList)
+        expected = 0.0 
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+
 
     """
     Test each format in each confidence score cateogory individually.

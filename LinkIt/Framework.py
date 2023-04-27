@@ -90,11 +90,11 @@ def column_find_best_guess(confidence_scores):
     # Andrew: additional loop was necessary here
     # Andrew: for each column in the original table
     for disp_column in confidence_scores:
-        # Andrew: for each plugin that has given a confidence score for that column's type
         plugin_names = list(confidence_scores[disp_column].keys())
+        # Andrew: for each plugin that has given a confidence score for disp_column's type
         for plugin in plugin_names:
-            # Andrew: original logic, I just updated variable names
-            current_score = confidence_scores[disp_column][plugin] 
+            # Andrew: the original logic, I just updated variable names
+            current_score = confidence_scores[disp_column][plugin]
             if current_score > best_confidence_score:
                 best_confidence_score = current_score
                 is_generic = False

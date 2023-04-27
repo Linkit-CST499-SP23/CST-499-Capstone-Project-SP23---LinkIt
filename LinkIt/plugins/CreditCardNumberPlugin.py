@@ -11,7 +11,7 @@ output: double
 """
 
 
-def get_confidence_score(col):
+def get_confidence_score(col_name, col):
     scores = []
     col = remove_whitespace(col)
     col = remove_null(col)

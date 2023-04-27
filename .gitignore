@@ -162,3 +162,4 @@ cython_debug/
 /.vs/slnx.sqlite
 /catalog.csv
 /LinkIt/csv/catalog.csv
+/LinkIt/csv/OutputCatalog.csv

@@ -48,10 +48,10 @@ def get_elem_score(col_name_check, elem):
         return (100.00 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '+1555555555' or '+1 555.555.5555' or '+555-555-5555'
     elif (match := re.search("(\+1?\s?\d{3}[\.-]\d{3}[\.-]\d{4})|(\+1\d{10})", elem)) is not None:
-        return (80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
+        return (90.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '555-555-5555' or '555.555.5555' or '1-555-555-5555'
     elif (match := re.search("(1-\d{3}-\d{3}-\d{4})|(\d{3}[\.-]\d{3}[\.-]\d{4})", elem)) is not None:
-        return (60.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
+        return (80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '555 555 5555'
     elif (match := re.search("\d{3}\s\d{3}\s\d{4}", elem)) is not None:
         return (40.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
@@ -70,7 +70,7 @@ output: string list
 
 """
 def remove_null(col_vals):
-    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
+    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a', '']
     col_vals = [elem for elem in col_vals if elem is not None] # remove None values
     col_vals = [elem for elem in col_vals if elem not in null_strings] # remove any strings denoting null values
     return col_vals

@@ -19,13 +19,13 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 62.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
-        # tests a mix of formats that range between a confidence score of 60 and 80
+        # tests a mix of formats that range between a confidence score of 80 and 90
         # with 'phone' found in column name 
         validPhoneNumList = ['+212-456-7890', '+1 212.456.7890', '+1 555-687-9596', 
                                 '+12124567890', '+1849387349' '212.456.7890', '1-212-456-7890', '212-456-7890', 
                                 '1-345-345-3453', '212.456.7890']
         actual = get_confidence_score("phone_#", validPhoneNumList)
-        expected = 70.0
+        expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         
         # tests a mix of formats that range between a confidence score of 40 and 20
@@ -75,17 +75,17 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 90.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
-        # tests invalid typos within the 80 score category
+        # tests invalid typos within the 90 score category
         invalidPhoneNumList = ['+212-456-78902', '+1 212.456.7890..', '-+12124567890-0']
         actual = get_confidence_score("", invalidPhoneNumList)
-        expected = 70.0 
+        expected = 90.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
-        # tests invalid typos within the 60 score category
+        # tests invalid typos within the 80 score category
         # with 'phone' found in column name
         invalidPhoneNumList = ['.212.456.7890', '.1-212-456-7890.', 'io212-456-7890o']
         actual = get_confidence_score("PhoneNum", invalidPhoneNumList)
-        expected = 50.0 
+        expected = 80.0 
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
         # tests invalid typos within the 40 score category
@@ -121,31 +121,31 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 100.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
-    def test_80_score_phone_number_formats(self):
+    def test_90_score_phone_number_formats(self):
         # test with a mix of whether 'phone' was found in the column name or not.
         actual = get_elem_score(True, '+212-456-7890')
-        expected = 80.0
+        expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         actual = get_elem_score(False, '+1 212.456.7890')
-        expected = 80.0
+        expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         actual = get_elem_score(True, '+1 212-456-7890')
-        expected = 80.0
+        expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         actual = get_elem_score(False, '+12124567890')
-        expected = 80.0
+        expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
-    def test_60_score_phone_number_formats(self):
+    def test_80_score_phone_number_formats(self):
         # test with a mix of whether 'phone' was found in the column name or not.
         actual = get_elem_score(True, '212.456.7890')
-        expected = 60.0
+        expected = 80.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         actual = get_elem_score(False, '1-212-456-7890')
-        expected = 60.0
+        expected = 80.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
         actual = get_elem_score(True, '212-456-7890')
-        expected = 60.0
+        expected = 80.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
     def test_40_score_phone_number_formats(self):

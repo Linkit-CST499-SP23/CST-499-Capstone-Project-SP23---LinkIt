@@ -87,7 +87,7 @@ class PluginApi(object):
     def analyze_column(self, column_name, column):
         """
         Runs all plugins on a column and returns a dict with the confidence 
-        scores and plugin's names
+        scores and plugins' names
 
         TODO/FUTURE: add the ability to choose which plugins are applied
 
@@ -97,13 +97,13 @@ class PluginApi(object):
             the column of data being scanned
 
 
-        output: dict {int: string}
+        output: dict {string:int}
         """
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
             confidence_score = self.plugin_confidence(plugin, column_name, column)
-            confidence_scores.update({confidence_score: plugin})
+            confidence_scores.update({plugin:confidence_score})
         print(confidence_scores) #ONLY HERE FOR TESTING
         return confidence_scores
 

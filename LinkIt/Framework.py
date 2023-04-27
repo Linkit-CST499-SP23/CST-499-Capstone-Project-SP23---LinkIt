@@ -36,7 +36,30 @@ def create_catalog(confidence_scores, column_name, column_data, plugin_name):
     """
     Creates a catalog of analyzed CSV data, selecting the plugin with the highest confidence score.
     """
-    #analyze data should return list of confidence scores & plugin names so it can be determined if they are generic or not, or scores can be tagged as generic or non gerneric
+
+    # Populate catalog
+    #need to make sure data does not get overwritten 
+    with open('catalog.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([column_name, column_data, best_plugin, is_generic, best_confidence_score])
+
+
+def analyze_data(dict_values):
+    column_names = dict_values.keys()
+    api = PluginApi()
+    dict_results = {}
+    # Andrew: run analyze_column from API for every column in csv file
+    for row in dict_values:
+        conf_score = api.analyze_column(column_names[row], 
+                                        dict_values[column_names[row]])
+        dict_results.update({column_names[row]: conf_score})
+
+    # Andrew: return dict {column name: {plugin names, confidence scores}}
+    return dict_results
+
+def column_find_best_guess(confidence_scores):
+    #analyze data should return list of confidence scores & plugin names so it can be determined 
+    #if they are generic or not, or scores can be tagged as generic or non gerneric
     #need to create values to determine which plugin and confidence score will be selected
     #if nongeneric is 80% or higher it should automattically win
     #if generic is 95% or higher it should win
@@ -50,34 +73,29 @@ def create_catalog(confidence_scores, column_name, column_data, plugin_name):
     best_confidence_score = -1
     is_generic = True
 
-    for score in confidence_scores:
-        if score > best_confidence_score:
-            best_confidence_score = score
-            is_generic = False
-            if score >= nongeneric_threshold:
-                best_plugin = plugin_name
-            elif best_plugin is None or best_confidence_score >= 0.95:
-                best_plugin = plugin_name if score >= generic_threshold else "generic"
+    # Andrew: return value, dict{column_name:{plugin_name:score}} 
+    name_plugin_score = {}
 
-    # Populate catalog
-    #need to make sure data does not get overwritten 
-    with open('catalog.csv', 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([column_name, column_data, best_plugin, is_generic, best_confidence_score])
+    # Andrew: for each column in the original table
+    for disp_column in confidence_scores:
+        # Andrew: for each plugin that has given a confidence score for that column's type
+        for plugin_name in confidence_scores[disp_column]:
+            # Andrew: original logic, just updated variable names and added declaration for cleanliness
+            current_score = confidence_scores[disp_column[plugin_name]] 
+            if current_score > best_confidence_score:
+                best_confidence_score = current_score
+                is_generic = False
+                if current_score >= nongeneric_threshold:
+                    best_plugin = plugin_name # Andrew: fairly sure this will assign String, not dict 
+                elif best_plugin is None or best_confidence_score >= 0.95:
+                    best_plugin = plugin_name if current_score >= generic_threshold else "generic"
+        # Andrew: adds the best plugin and its score to the column name list
+        plugin_and_score = {best_plugin: best_confidence_score}
+        name_plugin_score.update({disp_column: plugin_and_score})
+
+    return name_plugin_score
 
 
-def analyze_data(dict_values):
-    column_names = dict_values.keys()
-    api = PluginApi()
-    dict_results = {}
-    # run analyze_column from API for every column in csv file
-    for row in dict_values:
-        conf_score = api.analyze_column(column_names[row], 
-                                        dict_values[column_names[row]])
-        dict_results.update({column_names[row], conf_score})
-
-    # return dict {column name: {plugin names, confidence scores}}
-    return dict_results
 
 
 def start_linkit():

@@ -4,17 +4,25 @@ from pluginApi import PluginApi
 from collections import defaultdict
 
 # Andrew:
+# BUGS/ISSUES
+# - Some plugins are not loading (possibly becasue of syntax issues within the plugin)
+# -- Not loading: Phone Number, Credit Card Number
+# -- Loading: Credit CVV, Credit Exp Date, Generic Number, Generic Text 
+# - Using Smaple Data, getting a lot of 0.0 confidence scores (other than Generic Text, which is consistently 49%) 
+# which feels wrong. The data does seem to be going through correctly to the plugins though, so I'm not sure whats up
+#
 # TO DO:
-# - make sure data written to catalog does not overwrite other data (create iterative new catalogue files?)
-# - fix/improve process for determining best score (I have not adjusted this logic)  
+# - only take a sample of data. Currently entire file is read.
+# - fix/improve process for determining best score (I have not touched this) 
+# - complete documentation 
 # - add additional try-catch at key points 
 # - improve catalogue layout 
-# - adjust consol output and catalogue output for taking multiple csv's
+# - adjust console output and catalogue output for taking multiple csv's
 
 
 def read_csv_file(filename):
     """
-    Reads in a CSV file and returns a list containing the specified column data and its name.
+    Reads in a CSV file and returns a dict containing the specified column data and its name.
     """
     columns_dict = defaultdict(list)
     with open("LinkIt/csv/" + filename, 'r') as csv_file:
@@ -33,7 +41,7 @@ def create_catalog(column_guesses, column_data):
     # Populate catalog
     #need to make sure data does not get overwritten 
     column_names = list(column_guesses.keys())
-    with open('LinkIt/csv/catalog.csv', 'a', newline='') as file:
+    with open('LinkIt/csv/OutputCatalog.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         for column_name in column_names:
             best_plugin = list(column_guesses[column_name].keys())[0] 
@@ -43,14 +51,16 @@ def create_catalog(column_guesses, column_data):
             writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
 
 def analyze_data(dict_values):
+    """
+    Uses PluginApi to gather confidence scores for all columns of a table 
+    """
     column_names = list(dict_values.keys())
     api = PluginApi()
     confidence_scores = {}
     # Andrew: run analyze_column from API for every column in csv file
 
-    #console output for debug
-    print("Framework: confidence scores:")
     for column_name in column_names:
+        print("Framework: Analyzing '" + column_name + "'...")
         single_conf_score = api.analyze_column(column_name, dict_values[column_name])
         confidence_scores.update({column_name: single_conf_score})
 
@@ -58,6 +68,9 @@ def analyze_data(dict_values):
     return confidence_scores
 
 def column_find_best_guess(confidence_scores):
+    """
+    docu here
+    """
     #analyze data should return list of confidence scores & plugin names so it can be determined 
     #if they are generic or not, or scores can be tagged as generic or non gerneric
     #need to create values to determine which plugin and confidence score will be selected
@@ -74,13 +87,13 @@ def column_find_best_guess(confidence_scores):
     is_generic = True
 
     best_guesses_dict = {}
-
+    # Andrew: additional loop was necessary here to get all data
     # Andrew: for each column in the original table
     for disp_column in confidence_scores:
         # Andrew: for each plugin that has given a confidence score for that column's type
         plugin_names = list(confidence_scores[disp_column].keys())
         for plugin in plugin_names:
-            # Andrew: original logic, just updated variable names and added declaration for cleanliness
+            # Andrew: original logic, just updated variable names
             current_score = confidence_scores[disp_column][plugin] 
             if current_score > best_confidence_score:
                 best_confidence_score = current_score
@@ -93,7 +106,7 @@ def column_find_best_guess(confidence_scores):
         plugin_and_score = {best_plugin: best_confidence_score}
         best_guesses_dict.update({disp_column: plugin_and_score})
 
-    # return dict{column_name:{plugin_name:score}}
+    # Andrew: return dict{column_name:{plugin_name:score}}
     return best_guesses_dict
 
 
@@ -109,27 +122,27 @@ def start_linkit():
     for filename in filenames:
         try:
             #reading files
-            columns_dict = read_csv_file(filename.strip()) #TO DO: only take sample of data
+            columns_dict = read_csv_file(filename.strip())
 
-            #debug
+            #console
             print("Framework: csv read...")
 
             #running plugin analysis 
             confidence_scores = analyze_data(columns_dict)
 
-            #debug
+            #console
             print("Framework: confidence scores recieved...")
 
             # Andrew: made a seperate function for selecting the best plugin 
             best_guesses_dict = column_find_best_guess(confidence_scores)
 
-            #debug
+            #console
             print("Framework: scores analyzed...")
 
             # populating output catalog with best guesses and sample data
             create_catalog(best_guesses_dict, columns_dict)
 
-            #debug
+            #console
             print("Framework: catalogue created...")
 
         except FileNotFoundError:

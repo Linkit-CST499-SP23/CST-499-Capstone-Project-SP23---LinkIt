@@ -59,13 +59,13 @@ class PluginApi(object):
                 if not "__" in plugin:
                     plug_name = plugin[:-3]
                     try:
-                        self.plugin_dict[plug_name] = importlib.import_module("plugins." + plug_name)
+                        self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
                     except:
-                        print("++ ERROR LOADING " + plug_name + " ++")
+                        print("API: ++ ERROR LOADING " + plug_name + " ++")
         except:
             print("error locating plugins folder or listing contents")
-           
-            
+
+                  
     def plugin_confidence(self, plugin, column_name, column):
         """ 
         retrieves a confidence score from a plugin for a column of data
@@ -104,11 +104,11 @@ class PluginApi(object):
         for plugin in plugins:
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             confidence_scores.update({plugin:confidence_score})
-        # Console output for debug
-        print("-----" + column_name + "-----")
-        print(confidence_scores)
-        print("-------------------")
-        #
+        
+        print("API: '" + column_name + "' confidence scores:") # Console output for debug
+        print(confidence_scores) # Console output for debug
+        print("-------------------") # Console output for debug
+        
         return confidence_scores
 
 

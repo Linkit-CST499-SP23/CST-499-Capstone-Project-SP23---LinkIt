@@ -2,6 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\LinkIt",
+    "\\LinkIt\\csv",
+    "\\LinkIt\\plugins",
     "\\tests"
   ],
   "SelectedNode": "\\LinkIt\\Framework.py",

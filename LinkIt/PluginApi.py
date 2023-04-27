@@ -46,6 +46,7 @@ class PluginApi(object):
 
     def __init__(self):
         self.initialize_plugins()
+        print("API: plugins initialized...")
 
     def initialize_plugins(self):
         """ 
@@ -54,18 +55,17 @@ class PluginApi(object):
         """
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
-            try:
-                for plugin in plugin_files:
-                    if not "__" in plugin:
-                        plug_name = plugin[:-3]
-                        self.plugin_dict[plug_name] = importlib.import_module("LinkIt.plugins." + 
-                                                                              plugin[:-3])
-            except:
-                print("error importing plugins")
+            for plugin in plugin_files:
+                if not "__" in plugin:
+                    plug_name = plugin[:-3]
+                    try:
+                        self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
+                    except:
+                        print("API: ++ ERROR LOADING " + plug_name + " ++")
         except:
             print("error locating plugins folder or listing contents")
-           
-            
+
+                  
     def plugin_confidence(self, plugin, column_name, column):
         """ 
         retrieves a confidence score from a plugin for a column of data
@@ -104,7 +104,11 @@ class PluginApi(object):
         for plugin in plugins:
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             confidence_scores.update({plugin:confidence_score})
-        print(confidence_scores) #ONLY HERE FOR TESTING
+        
+        print("API: '" + column_name + "' confidence scores:") # Console output for debug
+        print(confidence_scores) # Console output for debug
+        print("-------------------") # Console output for debug
+        
         return confidence_scores
 
 

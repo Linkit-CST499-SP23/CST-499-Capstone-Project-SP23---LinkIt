@@ -8,7 +8,7 @@ from collections import defaultdict
 # - Some plugins are not loading (possibly becasue of syntax issues within the plugin)
 # -- Not loading: Phone Number, Credit Card Number
 # -- Loading: Credit CVV, Credit Exp Date, Generic Number, Generic Text 
-# - Using Smaple Data, getting a lot of 0.0 confidence scores (other than Generic Text, which is consistently 49%) 
+# - Using Sample Data, getting a lot of 0.0 confidence scores (other than Generics, which are consistently 0-49%) 
 # which feels wrong. The data does seem to be going through correctly to the plugins though, so I'm not sure whats up
 #
 # TO DO:
@@ -87,21 +87,22 @@ def column_find_best_guess(confidence_scores):
     is_generic = True
 
     best_guesses_dict = {}
-    # Andrew: additional loop was necessary here to get all data
+    # Andrew: additional loop was necessary here
     # Andrew: for each column in the original table
     for disp_column in confidence_scores:
         # Andrew: for each plugin that has given a confidence score for that column's type
         plugin_names = list(confidence_scores[disp_column].keys())
         for plugin in plugin_names:
-            # Andrew: original logic, just updated variable names
+            # Andrew: original logic, I just updated variable names
             current_score = confidence_scores[disp_column][plugin] 
             if current_score > best_confidence_score:
                 best_confidence_score = current_score
                 is_generic = False
                 if current_score >= nongeneric_threshold:
-                    best_plugin = plugin # Andrew: fairly sure this will assign String 
+                    best_plugin = plugin  
                 elif best_plugin is None or best_confidence_score >= 0.95:
                     best_plugin = plugin if current_score >= generic_threshold else "generic"
+
         # Andrew: adds the best plugin and its score to the column name list
         plugin_and_score = {best_plugin: best_confidence_score}
         best_guesses_dict.update({disp_column: plugin_and_score})

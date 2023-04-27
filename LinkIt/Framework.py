@@ -17,7 +17,7 @@ def read_csv_file(filename):
     """
     with open(filename, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
-        # Andrew: reader is a dict, [fieldname (default 1st row's values)]:[row data]. Without
+        # Andrew: reader is a dict {fieldname (default 1st row's values):row data}. Without
         # a loop of some kind, most efficient to just return the dict and sort it out later.
 
         #headers = reader.fieldnames
@@ -32,16 +32,19 @@ def read_csv_file(filename):
     # kind. Also, probably a seperate func for finding the best plugin.
 
                        #or could take a dictionary containg these 
-def create_catalog(confidence_scores, column_name, column_data, plugin_name):
+def create_catalog(column_guesses, column_data):
     """
     Creates a catalog of analyzed CSV data, selecting the plugin with the highest confidence score.
     """
-
     # Populate catalog
     #need to make sure data does not get overwritten 
     with open('catalog.csv', 'a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([column_name, column_data, best_plugin, is_generic, best_confidence_score])
+        for column in column_guesses:
+            column_name = column_guesses.keys()[column] #Andrew: fairly sure this will assign the right name
+            best_plugin = column_guesses[column].keys()[0] #Andrew: fairly sure this will assign the right name
+            best_confidence_score = column_guesses[column][0] #Andrew: fairly sure this will assign the right score 
+            writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) #removed is_generic for now
 
 
 def analyze_data(dict_values):
@@ -79,16 +82,17 @@ def column_find_best_guess(confidence_scores):
     # Andrew: for each column in the original table
     for disp_column in confidence_scores:
         # Andrew: for each plugin that has given a confidence score for that column's type
-        for plugin_name in confidence_scores[disp_column]:
+        plugin_names = confidence_scores[disp_column].keys()
+        for plugin in confidence_scores[disp_column]:
             # Andrew: original logic, just updated variable names and added declaration for cleanliness
-            current_score = confidence_scores[disp_column[plugin_name]] 
+            current_score = confidence_scores[disp_column[plugin]] 
             if current_score > best_confidence_score:
                 best_confidence_score = current_score
                 is_generic = False
                 if current_score >= nongeneric_threshold:
-                    best_plugin = plugin_name # Andrew: fairly sure this will assign String, not dict 
+                    best_plugin = plugin_names[plugin] # Andrew: fairly sure this will assign String 
                 elif best_plugin is None or best_confidence_score >= 0.95:
-                    best_plugin = plugin_name if current_score >= generic_threshold else "generic"
+                    best_plugin = plugin_names[plugin] if current_score >= generic_threshold else "generic"
         # Andrew: adds the best plugin and its score to the column name list
         plugin_and_score = {best_plugin: best_confidence_score}
         name_plugin_score.update({disp_column: plugin_and_score})
@@ -111,14 +115,13 @@ def start_linkit():
             dict_values = read_csv_file(filename.strip()) #TO DO: only take sample of data
 
             #running plugin analysis 
-            raw_analyzed_csv_data = analyze_data(dict_values)
+            confidence_scores = analyze_data(dict_values)
 
-            # Andrew: Should probably make a seperate function for selecting the best plugin
-            # and then pass the col_name, best plugin, its conf score, and the data 
-            # analyzed_csv_data = find_best_guess(analyzed_csv_data)
+            # Andrew: made a seperate function for selecting the best plugin 
+            column_guesses = column_find_best_guess(confidence_scores)
 
-            #populating output catalog
-            create_catalog(*analyzed_csv_data, plugin_name="example_plugin")
+            # populating output catalog with best guesses and sample data
+            create_catalog(column_guesses, dict_values)
 
         except FileNotFoundError:
             print("File not found:", filename.strip())

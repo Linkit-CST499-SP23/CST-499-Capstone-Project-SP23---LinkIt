@@ -1,10 +1,11 @@
 import pandas as pd
 import statistics
 from fuzzywuzzy import fuzz
+from state_city_database import us_cities
 
 #US cities databease with ver 108,000 cities and towns from all 50 states
-cities_df = pd.read_csv('plugins/us_cities.csv')
-city_names = set(cities_df['city'].str.lower())
+#cities_df = pd.read_csv('plugins/us_cities.csv')
+#city_names = set(cities_df['city'].str.lower())
 
 """
 The get_confidence_score() function takes in column name as a string value
@@ -42,14 +43,19 @@ def get_confidence_score(col_name, col_values):
         
 
 def valid_city(city_name):
-    if city_name.lower() in city_names:
+    if city_name.lower() in us_cities:
         return True
     else:
-        # check if close match: checks if value is similar to any of the values in city_names (in case of spelling errors) 
-        for x in city_names:
+        # check if close match
+        for x in us_cities:
             if fuzz.token_set_ratio(x, city_name) >= 70:
                 return True
+        #check common city suffixes
+        city_suffix= ['ville', 'town', 'burg', 'burgh', 'ford', 'field', 'ston', 'port', 'view', 'beach', 'crest', 'land', 'heights']
+        if city_suffix in city_name:
+            return True
         return False
+    
     
 def remove_null(col_values):
      null_values= ["", "NAN", "NaN","nan", "Null", None, "NA", "N/A", "na","n/a", "null", "NULL", ]
@@ -71,5 +77,3 @@ def remove_outliers(scores):
 
     scores = [s for s in scores if s not in outliers]
     return scores
-
-print(get_confidence_score())

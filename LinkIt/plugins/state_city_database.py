@@ -1,3 +1,5 @@
+import pandas as pd
+
 us_states = {
     "Alabama": "AL",
     "Alaska": "AK",
@@ -50,3 +52,6 @@ us_states = {
     "Wisconsin": "WI",
     "Wyoming": "WY"
 }
+
+cities_df = pd.read_csv('Linkit/plugins/us_cities.csv')
+us_cities = set(cities_df['city'].str.lower())

@@ -35,6 +35,8 @@ def get_elem_score(elem):
        return 100.0 
    elif (re.fullmatch("(\d+(\.\d+)?%)|(\.\d+%)", elem)):
        return 90.0
+   elif (re.fullmatch("((\d+\s\d+)+(\s\d+)*)|((\d+-\d+)+(-\d+)*)", elem)):
+       return 80.0
    elif (re.fullmatch("\d+/\d+", elem)):
        return 40.0
    else:

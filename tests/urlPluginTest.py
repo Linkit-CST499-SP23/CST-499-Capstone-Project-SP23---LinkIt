@@ -8,7 +8,7 @@ class TestGetConfidenceScore(unittest.TestCase):
     
     def test_get_confidence_score(self):
         # Test input list with various types of strings
-        input_name = 'links'
+        input_name = 'URL'
         input_list = [
             'https://www.test.com',
             'http://www.example.com',
@@ -25,6 +25,36 @@ class TestGetConfidenceScore(unittest.TestCase):
         
         # Expected confidence score for the above input list
         expected_score = 81.0
+        
+        # Call the function and check the result
+        self.assertEqual(get_confidence_score(input_name, input_list), expected_score)
+    
+    def test_get_confidence_score_of_0(self):
+        # Test input list with various types of strings
+        input_name = 'links'
+        input_list = [
+        ]
+        
+        # Expected confidence score for the above input list
+        expected_score = 0.0
+        
+        # Call the function and check the result
+        self.assertEqual(get_confidence_score(input_name, input_list), expected_score)
+    
+    def test_get_confidence_score_greater_100(self):
+        # Test input list with various types of strings
+        input_name = 'links'
+        input_list = [
+            'https://www.test.com',
+            'http://www.example.com',
+            'https://www.test2.com',
+            'http://www.example2.com',
+            'https://www.test3.com',
+            'http://www.example3.com',
+        ]
+        
+        # Expected confidence score for the above input list
+        expected_score = 100.0
         
         # Call the function and check the result
         self.assertEqual(get_confidence_score(input_name, input_list), expected_score)

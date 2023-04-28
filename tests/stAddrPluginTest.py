@@ -35,6 +35,16 @@ class TestGetConfidenceScore(unittest.TestCase):
         result = get_confidence_score(column_name, address_list)
         
         self.assertAlmostEqual(result, expected_score, places=1)
+    def test_empty_street_addr_list(self):
+        column_name = "Address"
+        address_list = [
+            
+        ]
+        expected_score = 0
+        
+        result = get_confidence_score(column_name, address_list)
+        
+        self.assertAlmostEqual(result, expected_score, places=1)
         
     def test_100_score_phone_number_formats(self):
         actual = get_elem_score('123 Main St, Apt 12')

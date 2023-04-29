@@ -4,13 +4,6 @@ from pluginApi import PluginApi
 from collections import defaultdict
 
 # Andrew:
-# BUGS/ISSUES
-# - Some plugins are not loading (possibly becasue of syntax issues within the plugin)
-# -- Not loading: Phone Number, Credit Card Number
-# -- Loading: Credit CVV, Credit Exp Date, Generic Number, Generic Text 
-# - Using Sample Data, getting a lot of 0.0 confidence scores (other than Generics, which are consistently 0-49%) 
-# which feels wrong. The data does seem to be going through correctly to the plugins though, so I'm not sure whats up
-#
 # TO DO:
 # - only take a sample of data. Currently entire file is read.
 # - fix/improve process for determining best score (I have not touched this) 

@@ -53,24 +53,19 @@ class PluginApi(object):
         Searches the LinkIt/plugins/ folder for plugins and imports them for use, as well as
         adding them to plugin_dict, which allows for calling of their functions dynamically later
         """
-        # commented for bugtesting
-        #try:
-        #    plugin_files = os.listdir('LinkIt/plugins/')
-        #    for plugin in plugin_files:
-        #        if not "__" in plugin:
-        #            plug_name = plugin[:-3]
-        #            try:
-        #                self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
-        #            except:
-        #                print("API: ++ ERROR LOADING " + plug_name + " ++")
-        #except:
-        #    print("error locating plugins folder or listing contents")
+        
+        try:
+            plugin_files = os.listdir('LinkIt/plugins/')
+            for plugin in plugin_files:
+                if not "__" in plugin:
+                    plug_name = plugin[:-3]
+                    try:
+                        self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
+                    except:
+                        print("API: ++ ERROR LOADING " + plug_name + " ++")
+        except:
+            print("error locating plugins folder or listing contents")
 
-        plugin_files = os.listdir('LinkIt/plugins/')
-        for plugin in plugin_files:
-            if not "__" in plugin:
-                plug_name = plugin[:-3]
-                self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
                     
 
                   

@@ -1,5 +1,5 @@
 import re
-from us_states import us_states
+from state_city_database import us_states
 import statistics
 
 """

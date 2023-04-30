@@ -16,7 +16,7 @@ input: string list, string value
 output: double 
 
 """
-def get_confidence_score(col_name, col_values):
+def get_confidence_score(col_name="zip", col_values=['93933']):
      
      #column name check
      colcheck= ("city" in col_name.lower() or "cities" in col_name.lower())
@@ -43,16 +43,18 @@ def get_confidence_score(col_name, col_values):
         
 
 def valid_city(city_name):
-    if city_name.lower() in us_cities:
+    if any(city_name.lower() in us_cities or fuzz.token_set_ratio(x, city_name) >= 70 for x in us_cities):
+    #if city_name.lower() in us_cities:
         return True
     else:
         # check if close match
-        for x in us_cities:
-            if fuzz.token_set_ratio(x, city_name) >= 70:
-                return True
+        #for x in us_cities:
+            
+            #if fuzz.token_set_ratio(x, city_name) >= 70:
+                #return True
         #check common city suffixes
         city_suffix= ['ville', 'town', 'burg', 'burgh', 'ford', 'field', 'ston', 'port', 'view', 'beach', 'crest', 'land', 'heights']
-        if city_suffix in city_name:
+        if city_name in city_suffix:
             return True
         return False
     
@@ -77,3 +79,5 @@ def remove_outliers(scores):
 
     scores = [s for s in scores if s not in outliers]
     return scores
+
+print(get_confidence_score())

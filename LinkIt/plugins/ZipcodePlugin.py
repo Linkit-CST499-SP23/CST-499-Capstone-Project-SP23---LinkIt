@@ -8,7 +8,7 @@ The get_confidence_score() function takes in column name as a string value
 and a csv column as a list and returns a confidence score on how likely each value 
 in the column is a valid US zipcode.
 
-The plugin calculates the score using three parameters: 
+The plugin calculates the score based on three parameters: 
 column name, format of value passed and external api
 
 input: string list, string value

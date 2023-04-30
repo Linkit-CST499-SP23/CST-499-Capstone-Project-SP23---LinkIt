@@ -14,8 +14,7 @@ output: double
 def get_confidence_score(col_name, col_values):
      
      #column name check
-     colcheck= ("state" in col_name.lower() or "states" in col_name.lower())
-
+     colcheck= ("state" in col_name.lower())
      #Remove null values
      col_values= remove_null(col_values)
      #Remove spaces
@@ -38,7 +37,7 @@ def get_confidence_score(col_name, col_values):
      print(scores)
      return float(statistics.median(scores))
 
-# checks valid US state names/abberevations  from us_states.py- a dictionary of all US states
+# checks valid US state names/abberevations  from us_states.py
 def valid_state(state_name):
     if state_name.title() in us_states or state_name.upper() in us_states.values():
         return True

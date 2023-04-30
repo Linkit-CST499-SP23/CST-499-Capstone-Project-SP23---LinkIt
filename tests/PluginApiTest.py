@@ -27,8 +27,9 @@ class TestPluginApi(unittest.TestCase):
         """ Tests whether the api can dynamically execute plugin functions """
         test = PluginApi()
         plugin = "PhoneNumberPlugin"
+        column_name = 'phone'
         column = ['(555)555-555', '(555) 555-555', '+1555555555', '555.555.5555', '5555555555']
-        actual = test.plugin_confidence(plugin, column)
+        actual = test.plugin_confidence(plugin, column_name, column)
         errorZero = 0.0
         errorHundred = 100.00
         self.assertNotEqual(actual, errorZero)
@@ -40,8 +41,9 @@ class TestPluginApi(unittest.TestCase):
         and if the undesired_plugs works as intended
         """
         test = PluginApi()
+        column_name = 'phone'
         column = ['(555)555-555', '(555) 555-555', '+1555555555', '555.555.5555', '5555555555']
-        actual = test.analyze_column(column)
+        actual = test.analyze_column(column_name, column)
         self.assertIs(type(actual), dict)
 
   

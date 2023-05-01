@@ -26,7 +26,7 @@ def get_confidence_score(col_name, col_vals):
     if (len(scores) == 0):
         return 0.0
     else:
-        return sum(scores) / len(scores)
+        return min((sum(scores) / len(scores)), 100)
 
 
 

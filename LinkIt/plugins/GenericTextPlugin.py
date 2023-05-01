@@ -18,7 +18,11 @@ def get_confidence_score(col_name, col_vals):
         scores.append(get_elem_score(c))
 
     scores = remove_outliers(scores)
-    return sum(scores) / len(scores)
+
+    if (len(scores) == 0):
+        return 0.0
+    else:
+        return sum(scores) / len(scores)
 
 
 
@@ -64,6 +68,9 @@ output: double list
 
 """
 def remove_outliers(scores):
+    if (len(scores) == 0):
+        return scores
+    
     outliers = set()
     avg = sum(scores) / len(scores)
     standard_deviation = (sum([(s - avg)**2 for s in scores]) / len(scores))**(1/2)

@@ -108,6 +108,12 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 55.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
+        # test empty list
+        invalidPhoneNumList = []
+        actual = get_confidence_score("", invalidPhoneNumList)
+        expected = 0.0 
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+
 
     """
     Test each format in each confidence score cateogory individually.

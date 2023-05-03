@@ -58,7 +58,7 @@ def get_elem_score(col_name_check, elem):
         return (80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '555 555 5555'
     elif (match := re.search("\d{3}\s\d{3}\s\d{4}", elem)) is not None:
-        return (40.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
+        return (65.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '5555555555'
     elif (match := re.search("\d{10}", elem)) is not None:
         return (20.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost

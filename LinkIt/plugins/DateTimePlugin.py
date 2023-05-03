@@ -42,7 +42,7 @@ def get_elem_score(col_name_check, elem):
     try:
         parse(elem)
         return 100.0 * score_multiplier
-    except ValueError:
+    except Exception as e:
         return 0.0
 
 

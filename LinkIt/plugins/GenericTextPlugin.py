@@ -55,7 +55,7 @@ output: string list
 
 """
 def remove_null(col_vals):
-    col_vals = [elem for elem in col_vals if (elem is not None and elem is not '')] # remove None and empty string values
+    col_vals = [elem for elem in col_vals if (elem is not None and elem != '')] # remove None and empty string values
     return col_vals
 
 

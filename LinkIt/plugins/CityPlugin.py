@@ -1,7 +1,11 @@
 import pandas as pd
 import statistics
 from fuzzywuzzy import fuzz
-from state_city_database import us_cities
+
+import sys
+sys.path.append("..")
+
+from internal_databases.state_city_database import us_cities
 
 #US cities databease with ver 108,000 cities and towns from all 50 states
 #cities_df = pd.read_csv('plugins/us_cities.csv')

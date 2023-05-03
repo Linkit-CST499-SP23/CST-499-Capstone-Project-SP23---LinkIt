@@ -1,7 +1,7 @@
 import re
 
 # confidence scores
-def calculate_email_confidence(column_name, column_values):
+def get_confidence_score(column_name, column_values):
     email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     total_score = 0
     count = 0

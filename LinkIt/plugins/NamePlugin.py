@@ -9,7 +9,7 @@ input: string list
 output: double
 
 """
-def get_confidence_score(names):
+def get_confidence_score(col_name, names):
     scores = []
     names = remove_lead_trail_space(names)
     names = remove_null(names) 

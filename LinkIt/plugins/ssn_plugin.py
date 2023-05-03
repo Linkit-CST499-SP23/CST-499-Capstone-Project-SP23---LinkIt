@@ -1,6 +1,6 @@
 import re
 
-def SSN_confidence_score(col_name,column_val):
+def get_confidence_score(col_name,column_val):
     ssn_regex = r'^(?!000|666)[0-8]\d{2}(-?)\d{2}\1\d{4}$'
     total_score = 0
     count = 0

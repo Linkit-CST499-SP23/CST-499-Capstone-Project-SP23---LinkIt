@@ -60,7 +60,7 @@ output: string list
 
 """
 def remove_null(col_vals):
-    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
+    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a', '']
     col_vals = [elem for elem in col_vals if elem is not None] # remove None values
     col_vals = [elem for elem in col_vals if elem not in null_strings] # remove any strings denoting null values
     return col_vals

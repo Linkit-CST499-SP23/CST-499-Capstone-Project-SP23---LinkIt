@@ -1,10 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\documentation",
     "\\LinkIt",
-    "\\plugins",
+    "\\LinkIt\\csv",
+    "\\LinkIt\\plugins",
     "\\tests"
   ],
-  "SelectedNode": "\\LinkIt\\main.py",
+  "SelectedNode": "\\LinkIt\\Framework.py",
   "PreviewInSolutionExplorer": false
 }

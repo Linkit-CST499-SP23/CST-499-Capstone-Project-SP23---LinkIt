@@ -13,7 +13,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     def test_valid_number_list(self):
         # tests each number format once
         validNumList1 = ['12345', '45678.56789000', '.456789', '67,564', '89,890,890.89089898',
-                        '98%', '98.56%', '.53%', '34/434']
+                        '98%', '98.56%', '.53%', '555-5555', '34/434']
         actual = get_confidence_score("", validNumList1)
         expected = 96.25 # 40 is an outlier and should be removed from the final score 
         self.assertAlmostEqual(actual, expected, delta=10.5)
@@ -58,7 +58,7 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
     def test_invalid_number_list(self):
         # tests strings that guarantee a 0 confidence score
         invalidNumList = ['string', 's7987498f', '.22.2.456.789.', '56,44,44',
-                        '67%/78%']
+                        '67%/78%', '5- 53', '4 -43', '56-']
         actual = get_confidence_score("", invalidNumList)
         expected = 0.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
@@ -101,6 +101,17 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 90.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
+    def test_80_score_number_formats(self):
+        actual = get_elem_score('555-555-5555')
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+        actual = get_elem_score('555 555 5555')
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+        actual = get_elem_score('1-1-1')
+        expected = 80.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+
     def test_40_score_number_formats(self):
         actual = get_elem_score('34/343')
         expected = 40.0
@@ -123,6 +134,14 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         actual = get_elem_score('67%/78%')
         expected = 0.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
+        actual = get_elem_score('56-')
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+        actual = get_elem_score('5- 53')
+        expected = 0.0
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+        actual = get_elem_score('4 -43')
+        expected = 0.0
 
 
     """

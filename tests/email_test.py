@@ -1,6 +1,9 @@
 import unittest
 
-from email import calculate_email_confidence, remove_null
+import sys
+sys.path.append("..")
+
+from LinkIt.plugins.email_plugin import *
 
 class TestEmailConfidence(unittest.TestCase):
     

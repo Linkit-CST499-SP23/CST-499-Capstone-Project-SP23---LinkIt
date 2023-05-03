@@ -1,5 +1,9 @@
 import unittest
-from SSN import SSN_confidence_score,remove_null_values
+
+import sys
+sys.path.append("..")
+
+from LinkIt.plugins.ssn_plugin import *
 
 class TestSSNConfidenceScore(unittest.TestCase):
 

@@ -21,7 +21,11 @@ def get_confidence_score(col_name, col_vals):
         scores.append(get_elem_score(col_name_check, c))
 
     scores = remove_outliers(scores)
-    return sum(scores) / len(scores)
+
+    if (len(scores) == 0):
+        return 0.0
+    else:
+        return min((sum(scores) / len(scores)), 100)
 
 
 
@@ -54,7 +58,7 @@ def get_elem_score(col_name_check, elem):
         return (80.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '555 555 5555'
     elif (match := re.search("\d{3}\s\d{3}\s\d{4}", elem)) is not None:
-        return (40.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
+        return (65.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
     # matches '5555555555'
     elif (match := re.search("\d{10}", elem)) is not None:
         return (20.0 - (5.0 * (og_elem_length - (match.end(0) - match.start(0))))) * score_boost
@@ -97,6 +101,9 @@ output: double list
 
 """
 def remove_outliers(scores):
+    if (len(scores) == 0):
+        return scores
+    
     outliers = set()
     avg = sum(scores) / len(scores)
     standard_deviation = (sum([(s - avg)**2 for s in scores]) / len(scores))**(1/2)

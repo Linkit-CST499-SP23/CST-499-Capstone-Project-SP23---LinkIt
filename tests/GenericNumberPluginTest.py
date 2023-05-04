@@ -63,6 +63,12 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         expected = 0.0
         self.assertAlmostEqual(actual, expected, delta=10.5)
 
+        # test empty list
+        invalidNumList = []
+        actual = get_confidence_score("", invalidNumList)
+        expected = 0.0 
+        self.assertAlmostEqual(actual, expected, delta=10.5)
+
     """
     Tests the get_elem_score() function.
     More specifically, tests each number format.

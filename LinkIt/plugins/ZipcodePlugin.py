@@ -106,7 +106,8 @@ def get_format(c):
         return False
     
 def get_api_value(c):
-    
+    # debug
+    print("Issue here?")
     api_key = os.environ.get('OPENCAGE_API_KEY')
     geocoder = OpenCageGeocode(api_key)
     api_result=''
@@ -114,7 +115,8 @@ def get_api_value(c):
     api_json = geocoder.geocode(c)
     if(api_json!= []):
         api_result= api_json[0]['components']['_type']
-
+    # debug
+    print("Nope")
     if(api_result=='postcode'):
         return True
     else:

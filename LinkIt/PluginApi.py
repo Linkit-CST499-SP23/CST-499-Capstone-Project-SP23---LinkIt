@@ -65,6 +65,8 @@ class PluginApi(object):
         except:
             print("error locating plugins folder or listing contents")
 
+                    
+
                   
     def plugin_confidence(self, plugin, column_name, column):
         """ 
@@ -82,6 +84,7 @@ class PluginApi(object):
             return confidence_score
         except:
             print("error getting plugin_confidence score from" + str(plugin))
+            return 0.0
 
 
     def analyze_column(self, column_name, column):
@@ -102,12 +105,17 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
+            # for debugging purposes only
+            if (plugin == "CityPlugin"):
+                continue
+            # 
             confidence_score = self.plugin_confidence(plugin, column_name, column)
+            print("--> API: " + plugin + "score: " + str(confidence_score))
             confidence_scores.update({plugin:confidence_score})
         
-        print("API: '" + column_name + "' confidence scores:") # Console output for debug
-        print(confidence_scores) # Console output for debug
-        print("-------------------") # Console output for debug
+        #print("API: '" + column_name + "' confidence scores:") # Console output for debug
+        #print(confidence_scores) # Console output for debug
+        #print("-------------------") # Console output for debug
         
         return confidence_scores
 

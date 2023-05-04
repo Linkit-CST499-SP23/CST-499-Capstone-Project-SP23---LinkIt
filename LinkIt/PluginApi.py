@@ -52,7 +52,8 @@ class PluginApi(object):
         """ 
         Searches the LinkIt/plugins/ folder for plugins and imports them for use, as well as
         adding them to plugin_dict, which allows for calling of their functions dynamically later
-        """         
+        """
+         
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
             for plugin in plugin_files:
@@ -65,7 +66,9 @@ class PluginApi(object):
         except:
             print("error locating plugins folder or listing contents")
 
-                                     
+                    
+
+                  
     def plugin_confidence(self, plugin, column_name, column):
         """ 
         retrieves a confidence score from a plugin for a column of data
@@ -82,7 +85,7 @@ class PluginApi(object):
             return confidence_score
         except:
             print("error getting plugin_confidence score from" + str(plugin))
-            return "error"
+            return 0.0
 
 
     def analyze_column(self, column_name, column):
@@ -103,6 +106,7 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
+            print("--> running " + plugin)
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             confidence_scores.update({plugin:confidence_score})
         

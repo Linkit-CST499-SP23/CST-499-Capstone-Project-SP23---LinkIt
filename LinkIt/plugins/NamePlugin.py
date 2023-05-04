@@ -34,7 +34,9 @@ output: double
 """
 def get_name_score(name):
     if (re.fullmatch("[A-Z][a-z]* [A-Z][a-z]*", name)):
-        return 100.0 
+        return 100.0
+    elif (re.fullmatch("[A-Z][a-z]*", name)):
+        return 90.0  
     elif (re.fullmatch("[A-Z][a-z]* [A-Z][a-z]* [A-Z][a-z]*", name)):
         return 80.0
     else:
@@ -49,7 +51,7 @@ output: string list
 
 """
 def remove_null(names):
-    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
+    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a', '']
     names = [name for name in names if name is not None] # remove None values
     names = [name for name in names if name not in null_strings] # remove any strings denoting null values
     return names

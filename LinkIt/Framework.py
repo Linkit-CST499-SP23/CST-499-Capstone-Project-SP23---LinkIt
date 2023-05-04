@@ -6,11 +6,8 @@ from collections import defaultdict
 # Andrew:
 # TO DO:
 # - only take a sample of data. Currently entire file is read.
-# - fix/improve process for determining best score (I have not touched this) 
 # - complete documentation 
 # - add additional try-catch at key points 
-# - improve catalogue layout 
-# - adjust console output and catalogue output for taking multiple csv's
 
 
 def read_csv_file(filename):
@@ -29,7 +26,7 @@ def read_csv_file(filename):
                      
 def create_catalog(catalog_path, table_name, column_guesses, column_data):
     """
-    Creates a catalog of analyzed CSV data, selecting the plugin with the highest confidence score.
+    Creates a catalog of analyzed CSV data
     """
     # Populate catalog
     # need to make sure data does not get overwritten 
@@ -40,17 +37,16 @@ def create_catalog(catalog_path, table_name, column_guesses, column_data):
         for column_name in column_names:
             best_plugin = list(column_guesses[column_name].keys())[0] 
             best_confidence_score = column_guesses[column_name][best_plugin] 
+
+            # Andrew: trimming plugin name for readability 
+            if best_plugin.endswith("plugin") or best_plugin.endswith("Plugin"):
+                best_plugin = best_plugin[:-6]
+            if best_plugin.endswith("_"):
+                best_plugin = best_plugin[:-1]
         
             #Andrew: removed is_generic for now
-            writer.writerow([table_name, column_name, best_plugin, best_confidence_score, 
+            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
                              column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
-
-        #for column_name in column_names:
-        #    best_plugin = list(column_guesses[column_name].keys())[0] 
-        #    best_confidence_score = column_guesses[column_name][best_plugin] 
-        #
-            #Andrew: removed is_generic for now
-        #    writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
 
 def analyze_data(dict_values):
     """
@@ -113,8 +109,8 @@ def column_find_best_guess(confidence_scores):
         guess for that column. 
         """
 
-    generic_threshold = 0.95
-    nongeneric_threshold = 0.6
+    generic_threshold = 95
+    nongeneric_threshold = 60
     best_plugin = None
     best_confidence_score = -1
     best_guesses_dict = {}
@@ -193,7 +189,8 @@ def column_find_best_guess(confidence_scores):
 
        # Alex: DEBUG PRINT STATMENT # print("CURRENT COLUMN: " + disp_column + " BEST PLUGIN: " + str(best_plugin) + " BEST SCORE: " + str(best_confidence_score))
              
-        # Andrew: adds the best plugin and its score to the column name list
+        # Andrew: trims and adds the best plugin and its score to the column name list
+
         plugin_and_score = {best_plugin: best_confidence_score}
         best_guesses_dict.update({disp_column: plugin_and_score})
 
@@ -236,8 +233,6 @@ def start_linkit():
 
             #console
             print("Framework: confidence scores recieved...")
-
-            # print(confidence_scores)
 
             # Andrew: made a seperate function for selecting the best plugin 
             best_guesses_dict = column_find_best_guess(confidence_scores)

@@ -105,13 +105,17 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
-            print("--> running " + plugin)
+            # for debugging purposes only
+            if (plugin == "CityPlugin"):
+                continue
+            # 
             confidence_score = self.plugin_confidence(plugin, column_name, column)
+            print("--> API: " + plugin + "score: " + str(confidence_score))
             confidence_scores.update({plugin:confidence_score})
         
-        print("API: '" + column_name + "' confidence scores:") # Console output for debug
-        print(confidence_scores) # Console output for debug
-        print("-------------------") # Console output for debug
+        #print("API: '" + column_name + "' confidence scores:") # Console output for debug
+        #print(confidence_scores) # Console output for debug
+        #print("-------------------") # Console output for debug
         
         return confidence_scores
 

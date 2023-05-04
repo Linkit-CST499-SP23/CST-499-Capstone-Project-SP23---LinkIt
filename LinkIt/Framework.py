@@ -39,7 +39,7 @@ def create_catalog(column_guesses, column_data):
     Creates a catalog of analyzed CSV data, selecting the plugin with the highest confidence score.
     """
     # Populate catalog
-    #need to make sure data does not get overwritten 
+    # need to make sure data does not get overwritten 
     column_names = list(column_guesses.keys())
     with open('LinkIt/csv/OutputCatalog.csv', 'a', newline='') as file:
         writer = csv.writer(file)
@@ -48,7 +48,7 @@ def create_catalog(column_guesses, column_data):
             best_confidence_score = column_guesses[column_name][best_plugin] 
 
             #Andrew: removed is_generic for now
-            writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
+            writer.writerow([column_name, best_plugin, best_confidence_score]) 
 
 def analyze_data(dict_values):
     """
@@ -69,22 +69,59 @@ def analyze_data(dict_values):
 
 def column_find_best_guess(confidence_scores):
     """
-    docu here
-    """
-    #analyze data should return list of confidence scores & plugin names so it can be determined 
-    #if they are generic or not, or scores can be tagged as generic or non gerneric
-    #need to create values to determine which plugin and confidence score will be selected
-    #if nongeneric is 80% or higher it should automattically win
-    #if generic is 95% or higher it should win
-    #if they are equal non generic wins
-    # if nongenric is below 60% gernic wins
+        Returns the best guess for each column in a table, along with the corresponding plugin name and confidence score.
 
-    generic_threshold = 0.6
-    nongeneric_threshold = 0.8
+        Parameters
+        ----------
+        confidence_scores : dict
+            A dictionary containing the confidence scores for each column in the table. The keys of the dictionary should be the
+            column names, and the values should be dictionaries containing the plugin names and corresponding confidence scores
+            for each plugin that has given a confidence score for the column.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the best guess for each column in the table, along with the corresponding plugin name and
+            confidence score. The keys of the dictionary are the column names, and the values are dictionaries containing the
+            best plugin name and corresponding confidence score.
+
+        Notes
+        -----
+        The function determines the best guess for each column based on the following criteria:
+
+        - If a non-generic plugin has a confidence score of at least 60% and is higher than the generic, it is selected as the best guess.
+        - If a generic plugin has a confidence score of 95% or higher and is greatr than the nongeneric, it is selected as the best guess.
+        - If the highest confidence score for a column is below the non-generic threshold of 60%, a generic plugin is selected due to this no nongeneric confidence score lower than .60 will be returned
+    
+
+        The function assumes that each plugin is either generic or non-generic based on the presence of the word "generic" in the
+        plugin name, regardless of capitalization. The function returns a dictionary of the best guess for each column, along with
+        the corresponding plugin name and confidence score.
+
+        Examples
+        --------
+    
+        >>> confidence_scores = {{'first_name': {'GenericTextPlugin': 1, 'NamePlugin': .7, 'CreditCardExpirationDatePlugin': .0},
+                                 {'date': {'NamePlugin': .0, 'SocialMediaPlugin': .0,'GenericTextPlugin': .9}}
+       
+
+        In this example, the function takes a dictionary of confidence scores for two columns ('first_name' and 'date') and three
+        plugins ('GenericTextPlugin', 'NamePlugin', and 'CreditCardExpirationDatePlugin'). For 'first_name', 'NamePlugin' has the highest confidence score of 0.7 and is nongeneric, which
+        is above the non-generic threshold of 0.6, so it is selected as the best guess for that column. For 'date', 'GenericTextPlugin'
+        has the highest confidence score of 0.9, which is also above the generic threshold, so it is selected as the best
+        guess for that column.
+        """
+
+    generic_threshold = 0.95
+    nongeneric_threshold = 0.6
 
     best_plugin = None
-    best_confidence_score = -1
-    is_generic = True
+    best_plugin_nongeneric = None
+    best_plugin_generic = None
+    best_confidence_score_generic = 0
+    best_confidence_score_nongeneric = 0
+    best_confidence_score = 0
+    is_generic = False
 
     best_guesses_dict = {}
     # Andrew: additional loop was necessary here
@@ -92,18 +129,45 @@ def column_find_best_guess(confidence_scores):
     for disp_column in confidence_scores:
         plugin_names = list(confidence_scores[disp_column].keys())
         # Andrew: for each plugin that has given a confidence score for disp_column's type
+        print (confidence_scores)
         for plugin in plugin_names:
             # Andrew: the original logic, I just updated variable names
             current_score = confidence_scores[disp_column][plugin]
-            if current_score > best_confidence_score:
-                best_confidence_score = current_score
-                is_generic = False
-                if current_score >= nongeneric_threshold:
-                    best_plugin = plugin  
-                elif best_plugin is None or best_confidence_score >= 0.95:
-                    best_plugin = plugin if current_score >= generic_threshold else "generic"
 
+            # Alex: Checks if plugin is generic
+            if "generic" in plugin.lower():
+                is_generic = True
+
+            # Alex: logic gives best nongeneric confidence score
+            if current_score > best_confidence_score_nongeneric and not is_generic:
+                best_confidence_score_nongeneric = current_score
+                best_plugin_nongeneric = plugin
+
+            # Alex: logic gives best generic confidence score
+            if current_score > best_confidence_score_generic and is_generic:
+                best_confidence_score_generic = current_score
+                best_plugin_generic = plugin
+
+            # Alex: compares highest nongeneric and generic plugin scores, nongeneric wins if it is higher and above threshhold of 60 percent confidence
+            if  best_confidence_score_nongeneric > best_confidence_score_generic and best_confidence_score_nongeneric > nongeneric_threshold:
+                best_confidence_score = best_confidence_score_nongeneric
+                best_plugin = best_plugin_nongeneric
+
+            # Alex: compares highest nongeneric and generic plugin scores, generic wins if it is higher and above threshhold of 95 percent confidence
+            if  best_confidence_score_generic > best_confidence_score_nongeneric and best_confidence_score_generic > generic_threshold:
+                best_confidence_score = best_confidence_score_generic
+                best_plugin = best_plugin_generic
+            
+            # Alex: incase no plugin is above set threshold generic score is returned
+            elif best_confidence_score_generic > best_confidence_score_nongeneric:
+                 best_confidence_score = best_confidence_score_generic
+                 best_plugin = best_plugin_generic
+
+             
         # Andrew: adds the best plugin and its score to the column name list
+        print (confidence_scores)
+        print("IN BEST GUESS")
+        print("CURRENT COLUMN: " + disp_column + " BEST PLUGIN: " + best_plugin + " BEST SCORE: " + str(best_confidence_score) + " PLUGIN NAME: " + plugin)
         plugin_and_score = {best_plugin: best_confidence_score}
         best_guesses_dict.update({disp_column: plugin_and_score})
 

@@ -91,7 +91,6 @@ def column_find_best_guess(confidence_scores):
 
         - If a non-generic plugin has a confidence score of at least 60%, it is selected as the best guess.
         - If a generic plugin has a confidence score of 95% or higher, it is selected as the best guess.
-    
 
         The function assumes that each plugin is either generic or non-generic based on the presence of the word "generic" in the
         plugin name, regardless of capitalization. The function returns a dictionary of the best guess for each column, along with
@@ -108,7 +107,7 @@ def column_find_best_guess(confidence_scores):
         plugins ('GenericTextPlugin', 'NamePlugin', and 'CreditCardExpirationDatePlugin'). For 'first_name', 'NamePlugin' has the highest confidence score of 0.7 and is nongeneric, which
         is above the non-generic threshold of 0.6, so it is selected as the best guess for that column. For 'date', 'GenericTextPlugin'
         has the highest confidence score of 0.9, which is also above the generic threshold, so it is selected as the best
-        guess for that column.
+        guess for that column. 
         """
 
     generic_threshold = 0.95
@@ -141,7 +140,7 @@ def column_find_best_guess(confidence_scores):
             print("COLNAME: " + disp_column)
             print("PLUGIN: " + plugin)
             print(" CURRENT SCORE: " + str(current_score))
-           
+        
             '''
            
             # Alex: Checks if plugin is generic
@@ -222,7 +221,7 @@ def start_linkit():
             #console
             print("Framework: confidence scores recieved...")
 
-            print(confidence_scores)
+            # print(confidence_scores)
 
             # Andrew: made a seperate function for selecting the best plugin 
             best_guesses_dict = column_find_best_guess(confidence_scores)

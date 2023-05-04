@@ -53,7 +53,6 @@ class PluginApi(object):
         Searches the LinkIt/plugins/ folder for plugins and imports them for use, as well as
         adding them to plugin_dict, which allows for calling of their functions dynamically later
         """
-         
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
             for plugin in plugin_files:

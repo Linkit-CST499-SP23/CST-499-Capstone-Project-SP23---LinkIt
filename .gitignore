@@ -164,3 +164,4 @@ cython_debug/
 /LinkIt/csv/catalog.csv
 /LinkIt/csv/OutputCatalog.csv
 /LinkIt/csv/OutputCatalog.csv
+/LinkIt/PluginApi.py

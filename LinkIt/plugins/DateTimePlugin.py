@@ -54,7 +54,7 @@ output: string list
 
 """
 def remove_null(col_vals):
-    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a']
+    null_strings = ['NA', 'N/A', 'na', 'n/a', 'Na', 'N/a', '', ' ', 'none', 'None', 'NULL', 'null']
     col_vals = [elem for elem in col_vals if elem is not None] # remove None values
     col_vals = [elem for elem in col_vals if elem not in null_strings] # remove any strings denoting null values
     return col_vals
@@ -81,6 +81,9 @@ output: double list
 
 """
 def remove_outliers(scores):
+    if (len(scores) == 0):
+        return scores
+    
     outliers = set()
     avg = sum(scores) / len(scores)
     standard_deviation = (sum([(s - avg)**2 for s in scores]) / len(scores))**(1/2)

@@ -35,13 +35,22 @@ def create_catalog(column_guesses, column_data):
     #need to make sure data does not get overwritten 
     column_names = list(column_guesses.keys())
     with open('LinkIt/csv/OutputCatalog.csv', 'a', newline='') as file:
+        
         writer = csv.writer(file)
+
         for column_name in column_names:
             best_plugin = list(column_guesses[column_name].keys())[0] 
             best_confidence_score = column_guesses[column_name][best_plugin] 
-
+        
             #Andrew: removed is_generic for now
             writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
+
+        #for column_name in column_names:
+        #    best_plugin = list(column_guesses[column_name].keys())[0] 
+        #    best_confidence_score = column_guesses[column_name][best_plugin] 
+        #
+            #Andrew: removed is_generic for now
+        #    writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
 
 def analyze_data(dict_values):
     """

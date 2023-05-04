@@ -106,6 +106,7 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
+            print("--> running " + plugin)
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             confidence_scores.update({plugin:confidence_score})
         

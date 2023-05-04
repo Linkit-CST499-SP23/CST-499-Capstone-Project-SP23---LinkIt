@@ -1,5 +1,5 @@
 import csv
-import importlib
+from datetime import datetime
 from PluginApi import PluginApi
 from collections import defaultdict
 
@@ -27,23 +27,23 @@ def read_csv_file(filename):
     return columns_dict
 
                      
-def create_catalog(column_guesses, column_data):
+def create_catalog(catalog_path, table_name, column_guesses, column_data):
     """
     Creates a catalog of analyzed CSV data, selecting the plugin with the highest confidence score.
     """
     # Populate catalog
     #need to make sure data does not get overwritten 
     column_names = list(column_guesses.keys())
-    with open('LinkIt/csv/OutputCatalog.csv', 'a', newline='') as file:
+    with open(catalog_path, 'a', newline='') as file:
         
         writer = csv.writer(file)
-
         for column_name in column_names:
             best_plugin = list(column_guesses[column_name].keys())[0] 
             best_confidence_score = column_guesses[column_name][best_plugin] 
         
             #Andrew: removed is_generic for now
-            writer.writerow([column_name, best_plugin, best_confidence_score, column_data[column_name]]) 
+            writer.writerow([table_name, column_name, best_plugin, best_confidence_score, 
+                             column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
 
         #for column_name in column_names:
         #    best_plugin = list(column_guesses[column_name].keys())[0] 
@@ -65,6 +65,7 @@ def analyze_data(dict_values):
         print("Framework: Analyzing '" + column_name + "'...")
         single_conf_score = api.analyze_column(column_name, dict_values[column_name])
         confidence_scores.update({column_name: single_conf_score})
+        print()
 
     # Andrew: return dict {column name: {plugin names, confidence scores}}
     return confidence_scores
@@ -112,6 +113,17 @@ def column_find_best_guess(confidence_scores):
     # Andrew: return dict{column_name:{plugin_name:score}}
     return best_guesses_dict
 
+def initialize_catalog():
+    now = datetime.now()
+    dt_string = now.strftime("%b-%d-%Y_%H-%M-%S")
+    cat_name = 'catalog_' + dt_string
+    cat_path = 'LinkIt/csv/' + cat_name + '.csv'
+    open(cat_path, "x")
+    with open(cat_path, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
+                         "Data Sample 1", "Data Sample 2", "Data Sample 3"])
+    return cat_path
 
 
 
@@ -121,6 +133,8 @@ def start_linkit():
     """
     filenames_str = input("Enter the CSV files to be analyzed separated by commas: ")
     filenames = filenames_str.split(",")
+
+    catalog_path = initialize_catalog()
 
     for filename in filenames:
         try:
@@ -143,10 +157,10 @@ def start_linkit():
             print("Framework: scores analyzed...")
 
             # populating output catalog with best guesses and sample data
-            create_catalog(best_guesses_dict, columns_dict)
+            create_catalog(catalog_path, filename[:-4], best_guesses_dict, columns_dict)
 
             #console
-            print("Framework: catalogue created...")
+            print("Framework: catalogue updated...")
 
         except FileNotFoundError:
             print("Framework: File not found:", filename.strip())

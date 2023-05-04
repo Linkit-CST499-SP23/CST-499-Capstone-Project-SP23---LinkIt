@@ -4,9 +4,10 @@
     "\\documentation",
     "\\LinkIt",
     "\\LinkIt\\csv",
+    "\\LinkIt\\internal_databases",
     "\\LinkIt\\plugins",
-    "\\tests"
+    "\\Scripts"
   ],
-  "SelectedNode": "\\LinkIt\\Framework.py",
+  "SelectedNode": "\\LinkIt\\csv\\OutputCatalog.csv",
   "PreviewInSolutionExplorer": false
 }

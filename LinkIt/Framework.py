@@ -37,6 +37,8 @@ def create_catalog(catalog_path, table_name, column_guesses, column_data):
         for column_name in column_names:
             best_plugin = list(column_guesses[column_name].keys())[0] 
             best_confidence_score = column_guesses[column_name][best_plugin] 
+            # Alex: getting fallback plugin name
+            fallback_datatype =  column_guesses[column_name]["fallback"]
 
             # Andrew: trimming plugin name for readability 
             if best_plugin.endswith("plugin") or best_plugin.endswith("Plugin"):
@@ -44,9 +46,12 @@ def create_catalog(catalog_path, table_name, column_guesses, column_data):
             if best_plugin.endswith("_"):
                 best_plugin = best_plugin[:-1]
         
-            #Andrew: removed is_generic for now
-            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
-                             column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
+            # Andrew: removed is_generic for now
+            # Alex: removed sample data in output since it was not in design but can be added back
+            writer.writerow([table_name, column_name, best_plugin,fallback_datatype, round(best_confidence_score, 2)]) 
+            
+            #  writer.writerow([table_name, column_name, best_plugin,fallback_datatype, round(best_confidence_score, 2), 
+            #                  column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
 
 def analyze_data(dict_values):
     """
@@ -125,6 +130,7 @@ def column_find_best_guess(confidence_scores):
         best_confidence_score_nongeneric = -1
         best_plugin_nongeneric = None
         best_plugin_generic = None
+        fallback_plugin = None
         is_generic = False
 
         # Andrew: for each plugin that has given a confidence score for disp_column's type
@@ -187,12 +193,18 @@ def column_find_best_guess(confidence_scores):
              best_confidence_score = best_confidence_score_generic
              best_plugin = best_plugin_generic
 
-       # Alex: DEBUG PRINT STATMENT # print("CURRENT COLUMN: " + disp_column + " BEST PLUGIN: " + str(best_plugin) + " BEST SCORE: " + str(best_confidence_score))
-             
-        # Andrew: trims and adds the best plugin and its score to the column name list
+        # Alex: DEBUG PRINT STATMENT # print("CURRENT COLUMN: " + disp_column + " BEST PLUGIN: " + str(best_plugin) + " BEST SCORE: " + str(best_confidence_score))
+        
+        # Alex: assigning the best generic plugin to fallback
+        fallback_plugin = best_plugin_generic 
 
-        plugin_and_score = {best_plugin: best_confidence_score}
-        best_guesses_dict.update({disp_column: plugin_and_score})
+        # Andrew: trims and adds the best plugin and its score to the column name list
+        # Alex: adds fallback var to dict
+        plugin_and_score_and_fallback = {best_plugin: best_confidence_score,"fallback": fallback_plugin}
+    
+        best_guesses_dict.update({disp_column: plugin_and_score_and_fallback})
+
+        
 
     # Andrew: return dict{column_name:{plugin_name:score}}
     return best_guesses_dict
@@ -205,8 +217,10 @@ def initialize_catalog():
     open(cat_path, "x")
     with open(cat_path, 'a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
-                         "Data Sample 1", "Data Sample 2", "Data Sample 3"])
+        # Alex removed sample data and added fallback
+        writer.writerow(["Table Name", "Column Name", "Data Category","Fallback", "Confidence Score"])
+        #  writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
+        #                  "Data Sample 1", "Data Sample 2", "Data Sample 3"])
     return cat_path
 
 

@@ -5,65 +5,124 @@ from collections import defaultdict
 
 # Andrew:
 # TO DO:
-# - complete documentation 
 # - add additional try-catch at key points 
 
 
 def read_csv_file(filename):
     """
-    Reads in a CSV file and returns a dict containing the specified column data and its name.
+    Reads in a CSV file and returns a defaultdict containing the collumn data from the file
+            
+    Parameters
+    ----------
+    filename : string
+        the name of the file to be openned and scanned into a defaultdict 
+
+    output: defaultdict{string:list}
     """
+
     columns_dict = defaultdict(list)
+
+    # Andrew: open file with user given path
     with open("LinkIt/csv/" + filename, 'r') as csv_file:
-        reader = csv.DictReader(csv_file) 
+        reader = csv.DictReader(csv_file)
+        
+        # Andrew: enter all column data into list value, key = column's name
         for row in reader: 
             for (key,value) in row.items():
                 columns_dict[key].append(value)
-                                 
+
+    # Andrew: columns_dict{column_name:column_entries[]}                             
     return columns_dict
 
-                     
-def create_catalog(catalog_path, table_name, column_guesses, column_data):
-    """
-    Creates a catalog of analyzed CSV data
-    """
-    # Populate catalog
-    # need to make sure data does not get overwritten 
-    column_names = list(column_guesses.keys())
-    with open(catalog_path, 'a', newline='') as file:
-        
-        writer = csv.writer(file)
-        for column_name in column_names:
-            best_plugin = list(column_guesses[column_name].keys())[0] 
-            best_confidence_score = column_guesses[column_name][best_plugin] 
 
-            # Andrew: trimming plugin name for readability 
-            if best_plugin.endswith("plugin") or best_plugin.endswith("Plugin"):
-                best_plugin = best_plugin[:-6]
-            if best_plugin.endswith("_"):
-                best_plugin = best_plugin[:-1]
-        
-            #Andrew: removed is_generic for now
-            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
-                             column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
+def initialize_catalog():
+    """
+    Creates a catalog file using the current date and time for naming (e.g. catalog_may-02-2023_12-10-42.csv)
+
+    output: string
+    """
+
+    # Andrew: get current date and time, make file name
+    now = datetime.now()
+    dt_string = now.strftime("%b-%d-%Y_%H-%M-%S")
+    cat_name = 'catalog_' + dt_string
+    cat_path = 'LinkIt/csv/' + cat_name + '.csv'
+
+    # Andrew: create file
+    open(cat_path, "x")
+    with open(cat_path, 'a', newline='') as file:
+        writer = csv.writer(file)
+        # Andrew: write column headers
+        writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
+                         "Data Sample 1", "Data Sample 2", "Data Sample 3"])
+
+    return cat_path
+
 
 def analyze_data(dict_values):
     """
     Uses PluginApi to gather confidence scores for all columns of a table 
+
+    Parameters
+    ----------
+    dict_values : defaultdict {string:list}
+        the file data to be analyzed; {column_name:column_entries[]}
+
+    output: dict {dict{string:int}}
     """
+
     column_names = list(dict_values.keys())
     api = PluginApi()
     confidence_scores = {}
-    # Andrew: run analyze_column from API for every column in csv file
 
+    # Andrew: run analyze_column from API for every column in csv file
     for column_name in column_names:
         print("Framework: Analyzing '" + column_name + "'...")
         single_conf_score = api.analyze_column(column_name, dict_values[column_name])
         confidence_scores.update({column_name: single_conf_score})
         print()
 
-    # Andrew: return dict {column name: {plugin names, confidence scores}}
+    # Andrew: confidence_scores{column name: {plugin names, confidence scores}}
     return confidence_scores
+
+
+def create_catalog(catalog_path, table_name, column_guesses, column_data):
+    """
+    Populates the catalog file with analyzed data and program best-guesses for semantic meaning
+
+    Parameters
+    ----------
+    catalog_path : string
+        the filepath of the catalog into which the output data will be written
+    table_name : string
+        the name of the file that has been analyzed, and whose data is now being entered into the catalog
+    column_guesses : dict{string:dict{string:int}} 
+        the program's best guesses for the semantic meaning of the data sotred in the file; 
+        semantically, {column_name:{plugin_name:score}}
+    column_data : defaultdict{string:list}
+        the file data of [table_name]; semantically, {column_name:column_entries[]}
+        
+    """
+
+    column_names = list(column_guesses.keys())
+    with open(catalog_path, 'a', newline='') as file:
+        
+        writer = csv.writer(file)
+        for column_name in column_names:
+            # Andrew: gather relevant data
+            best_plugin = list(column_guesses[column_name].keys())[0] 
+            best_confidence_score = column_guesses[column_name][best_plugin] 
+
+            # Andrew: trimming plugin name down for readability 
+            if best_plugin.endswith("plugin") or best_plugin.endswith("Plugin"):
+                best_plugin = best_plugin[:-6]
+            if best_plugin.endswith("_"):
+                best_plugin = best_plugin[:-1]
+            
+            # Andrew: write data row
+            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
+                             column_data[column_name][1], column_data[column_name][2], column_data[column_name][3]]) 
+
 
 def column_find_best_guess(confidence_scores):
     """
@@ -114,7 +173,7 @@ def column_find_best_guess(confidence_scores):
     best_confidence_score = -1
     best_guesses_dict = {}
 
-    # Andrew: additional loop was necessary here
+
     # Andrew: for each column in the original table
     for disp_column in confidence_scores:
         plugin_names = list(confidence_scores[disp_column].keys())
@@ -196,29 +255,31 @@ def column_find_best_guess(confidence_scores):
     # Andrew: return dict{column_name:{plugin_name:score}}
     return best_guesses_dict
 
-def initialize_catalog():
-    now = datetime.now()
-    dt_string = now.strftime("%b-%d-%Y_%H-%M-%S")
-    cat_name = 'catalog_' + dt_string
-    cat_path = 'LinkIt/csv/' + cat_name + '.csv'
-    open(cat_path, "x")
-    with open(cat_path, 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
-                         "Data Sample 1", "Data Sample 2", "Data Sample 3"])
-    return cat_path
-
 
 
 def start_linkit():
     """
     Main program entry point. Prompts user for CSV files to analyze and runs the analysis.
     """
-    filenames_str = input("Enter the CSV files to be analyzed separated by commas: ")
-    filenames = filenames_str.split(",")
 
-    catalog_path = initialize_catalog()
+    # Andrew: Loop for checking valid file inputs
+    proceed = False
+    while not proceed:
+        try:
+            filenames_str = input("Enter the CSV files to be analyzed separated by commas: ")
+            filenames = filenames_str.split(",")
 
+            for filename in filenames:
+                file = open("LinkIt/csv/" + filename.strip(), 'r')
+                file.close()
+
+            proceed = True
+            catalog_path = initialize_catalog()
+
+        except FileNotFoundError:
+            print("Framework: File not found: ", filename.strip())
+    
+    # Andrew: Main loop
     for filename in filenames:
         try:
             #reading files

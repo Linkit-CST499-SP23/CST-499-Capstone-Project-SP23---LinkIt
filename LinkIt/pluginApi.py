@@ -78,6 +78,8 @@ class PluginApi(object):
             the plugin being run on that column
         column : string[]
             the column of data being scanned
+
+        output : float
         """
         try:
             confidence_score = self.plugin_dict[plugin].get_confidence_score(column_name, column)
@@ -127,7 +129,11 @@ class PluginApi(object):
 
 
     def get_plugin_list(self):
-        """ returns the keys (plugin names) of plugin_dict """
+        """ 
+        Returns the keys (plugin names) of plugin_dict 
+        
+        output: list[string]
+        """
         plugin_list = []
         for key in self.plugin_dict.keys():
             plugin_list.append(key)

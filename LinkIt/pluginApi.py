@@ -78,6 +78,8 @@ class PluginApi(object):
             the plugin being run on that column
         column : string[]
             the column of data being scanned
+
+        output : float
         """
         try:
             confidence_score = self.plugin_dict[plugin].get_confidence_score(column_name, column)
@@ -105,10 +107,10 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
-            # for debugging purposes only
+            # until City is fixed
             if (plugin == "CityPlugin"):
                 continue
-            # 
+            # -------------------
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             print("--> API: " + plugin + "score: " + str(confidence_score))
             confidence_scores.update({plugin:confidence_score})
@@ -127,7 +129,11 @@ class PluginApi(object):
 
 
     def get_plugin_list(self):
-        """ returns the keys (plugin names) of plugin_dict """
+        """ 
+        Returns the keys (plugin names) of plugin_dict 
+        
+        output: list[string]
+        """
         plugin_list = []
         for key in self.plugin_dict.keys():
             plugin_list.append(key)

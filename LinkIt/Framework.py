@@ -121,7 +121,8 @@ def create_catalog(catalog_path, table_name, column_guesses, column_data):
             
             # Andrew: write data row
             # Alex: removed sample data in output since it was not in design but can be added back
-            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
+            # Alex: wrapped confidence score in float() so that output catalog had standardized output 
+            writer.writerow([table_name, column_name, best_plugin, float(round(best_confidence_score, 2)), 
                              fallback_datatype, column_data[column_name][1], column_data[column_name][2]]) 
 
 

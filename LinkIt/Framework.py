@@ -5,7 +5,6 @@ from collections import defaultdict
 
 # Andrew:
 # TO DO:
-# - only take a sample of data. Currently entire file is read.
 # - complete documentation 
 # - add additional try-catch at key points 
 

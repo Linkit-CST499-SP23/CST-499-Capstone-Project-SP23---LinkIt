@@ -2,12 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\documentation",
-    "\\LinkIt",
-    "\\LinkIt\\csv",
-    "\\LinkIt\\internal_databases",
-    "\\LinkIt\\plugins",
-    "\\Scripts"
+    "\\LinkIt\\internal_databases"
   ],
-  "SelectedNode": "\\LinkIt\\csv\\OutputCatalog.csv",
+  "SelectedNode": "\\documentation\\City Plugin Documentation.pdf",
   "PreviewInSolutionExplorer": false
 }

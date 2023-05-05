@@ -21,14 +21,14 @@ def get_confidence_score(col_name, col):
 
     col_name = col_name.lower()
     if "ccn" in col_name or "credit" in col_name or "card" in col_name:
-        col_name_score_multiplier = 1.0
+        col_name_score_multiplier = 1.15
     else:
-        col_name_score_multiplier = .8
+        col_name_score_multiplier = 1.0
 
     for elem in col:
         scores.append(get_elem_score(elem))
 
-    confidence_score = (sum(scores) / len(scores)) * col_name_score_multiplier
+    confidence_score = min((sum(scores) / len(scores) * col_name_score_multiplier), 100.0)
 
     return confidence_score
 

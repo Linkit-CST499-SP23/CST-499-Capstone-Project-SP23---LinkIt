@@ -106,19 +106,19 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
         self.assertEqual(actual, expected)
 
     def test_col_name_score_multiplier(self):
-        ccns_100_score = ["5185 9079 1173 9953", "5502 5237 1521 6076",
+        ccns_90_score = ["5185 9079 1173 9953", "5502 5237 1521 6076",
                           "5192.5620.2049.0567", "5105.6621.8906.3407",
                           "4556-9183-3821-5083", "4929-7059-0783-2756",
                           "4556 1402 0445 9279", "4556 9040 8392 6843",
-                          "5218 1257 9588 8660", "4916 9463 8998 4732", ]
-        actual = get_confidence_score("credit card numbers", ccns_100_score)
-        actual2 = get_confidence_score("", ccns_100_score)
-        actual3 = get_confidence_score("ccn", ccns_100_score)
+                          "5218 1257 9588 8660", "1732"]
+        actual = get_confidence_score("credit card numbers", ccns_90_score)
+        actual2 = get_confidence_score("", ccns_90_score)
+        actual3 = get_confidence_score("ccn", ccns_90_score)
         expected = 100.0
-        expected2 = 80.0
+        expected2 = 90.0
         expected3 = 100.0
         self.assertEqual(actual, expected)
-        self.assertEqual(actual2, expected2)
+        self.assertAlmostEqual(actual2, expected2, delta=.1)
         self.assertEqual(actual3, expected3)
 
         ccns_75_score = ["0416614079752", "3184388909532",
@@ -126,9 +126,9 @@ class TestGetConfidenceScoreCol(unittest.TestCase):
 
         actual = get_confidence_score("ccn", ccns_75_score)
         actual2 = get_confidence_score("", ccns_75_score)
-        expected = 75.0
-        expected2 = 60.0
-        self.assertEqual(actual, expected)
+        expected = 86.25
+        expected2 = 75.0
+        self.assertAlmostEqual(actual, expected, delta=.1)
         self.assertAlmostEqual(actual2, expected2, delta=.1)
 
     def test_75_score_credit_card_numbers(self):

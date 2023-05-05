@@ -3,7 +3,7 @@ import unittest
 import sys
 sys.path.append("..")
 
-from LinkIt.plugins.DateTimePlugin import *
+from LinkIt.plugins.GenericDateTimePlugin import *
 
 class TestDTEP(unittest.TestCase):
 

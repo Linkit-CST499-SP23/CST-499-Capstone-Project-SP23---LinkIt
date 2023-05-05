@@ -1,6 +1,6 @@
 import csv
 from datetime import datetime
-from PluginApi import PluginApi
+from pluginApi import PluginApi
 from collections import defaultdict
 
 # Andrew:
@@ -261,7 +261,7 @@ def column_find_best_guess(confidence_scores):
 
         
 
-    # Andrew: return dict{column_name:{plugin_name:score}}
+    # Andrew: best_guesses_dict{column_name:{plugin_name:score}}
     return best_guesses_dict
 
 def initialize_catalog():
@@ -273,7 +273,7 @@ def initialize_catalog():
     with open(cat_path, 'a', newline='') as file:
         writer = csv.writer(file)
         # Alex removed sample data and added fallback
-        writer.writerow(["Table Name", "Column Name", "Data Category","Fallback", "Confidence Score"])
+        writer.writerow(["Table Name", "Column Name", "Data Category","Confidence Score","Fallback"])
         #  writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
         #                  "Data Sample 1", "Data Sample 2", "Data Sample 3"])
     return cat_path

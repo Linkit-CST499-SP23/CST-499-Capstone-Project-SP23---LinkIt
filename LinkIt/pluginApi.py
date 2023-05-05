@@ -107,10 +107,10 @@ class PluginApi(object):
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
-            # for debugging purposes only
+            # until City is fixed
             if (plugin == "CityPlugin"):
                 continue
-            # 
+            # -------------------
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             print("--> API: " + plugin + "score: " + str(confidence_score))
             confidence_scores.update({plugin:confidence_score})

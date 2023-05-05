@@ -1,12 +1,8 @@
 import csv
 from datetime import datetime
-from pluginApi import PluginApi
+from PluginApi import PluginApi
 from collections import defaultdict
-
-# Andrew:
-# TO DO:
-# - add additional try-catch at key points 
-
+ 
 
 def read_csv_file(filename):
     """
@@ -120,10 +116,13 @@ def create_catalog(catalog_path, table_name, column_guesses, column_data):
                 best_plugin = best_plugin[:-6]
             if best_plugin.endswith("_"):
                 best_plugin = best_plugin[:-1]
+            if fallback_datatype.endswith("plugin") or fallback_datatype.endswith("Plugin"):
+                fallback_datatype = fallback_datatype[:-6]
             
             # Andrew: write data row
             # Alex: removed sample data in output since it was not in design but can be added back
-            writer.writerow([table_name, column_name, best_plugin,fallback_datatype, round(best_confidence_score, 2)]) 
+            writer.writerow([table_name, column_name, best_plugin, round(best_confidence_score, 2), 
+                             fallback_datatype, column_data[column_name][1], column_data[column_name][2]]) 
 
 
 def column_find_best_guess(confidence_scores):
@@ -273,9 +272,11 @@ def initialize_catalog():
     with open(cat_path, 'a', newline='') as file:
         writer = csv.writer(file)
         # Alex removed sample data and added fallback
-        writer.writerow(["Table Name", "Column Name", "Data Category","Confidence Score","Fallback"])
-        #  writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score", 
-        #                  "Data Sample 1", "Data Sample 2", "Data Sample 3"])
+        # writer.writerow(["Table Name", "Column Name", "Data Category","Confidence Score","Fallback"])
+
+        # Andrew: re-added some sample data and reformatted ordering
+        writer.writerow(["Table Name", "Column Name", "Data Category", "Confidence Score","Fallback",  
+                          "Data Sample 1", "Data Sample 2"])
     return cat_path
 
 

@@ -60,7 +60,7 @@ class PluginApi(object):
                     plug_name = plugin[:-3]
                     try:
                         self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
-                    except:
+                    except Exception:
                         print("API: ++ ERROR LOADING " + plug_name + " ++")
         except:
             print("error locating plugins folder or listing contents")
@@ -108,8 +108,8 @@ class PluginApi(object):
         confidence_scores = {}
         for plugin in plugins:
             # until City is fixed
-            if (plugin == "CityPlugin"):
-                continue
+            # if (plugin == "CityPlugin"):
+            #     continue
             # -------------------
             confidence_score = self.plugin_confidence(plugin, column_name, column)
             print("--> API: " + plugin + "score: " + str(confidence_score))

@@ -6,7 +6,7 @@ import random
 import sys
 sys.path.append("..")
 
-from internal_databases.state_city_database import us_cities
+from LinkIt.internal_databases.state_city_database import us_cities
 
 #US cities databease with ver 108,000 cities and towns from all 50 states
 #cities_df = pd.read_csv('plugins/us_cities.csv')
@@ -22,7 +22,7 @@ output: double
 
 """
 def get_confidence_score(col_name, col_values):
-     if(len(col_values>50)):
+     if(len(col_values)>50):
         sample_values= random.sample(col_values,50)
      else:
          sample_values=col_values

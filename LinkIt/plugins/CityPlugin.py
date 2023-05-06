@@ -1,6 +1,7 @@
-#import pandas as pd #Andrew: temporarily commenting as it is not used
+
 import statistics
 from fuzzywuzzy import fuzz
+import random
 
 import sys
 sys.path.append("..")
@@ -21,16 +22,21 @@ output: double
 
 """
 def get_confidence_score(col_name, col_values):
+     if(len(col_values>50)):
+        sample_values= random.sample(col_values,50)
+     else:
+         sample_values=col_values
+    
      
      #column name check
      colcheck= ("city" in col_name.lower() or "cities" in col_name.lower())
      #Remove null values
-     col_values= remove_null(col_values)
+     sample_values= remove_null(sample_values)
      #Remove spaces
-     col_values= remove_spaces(col_values)
+     sample_values= remove_spaces(sample_values)
 
      scores= []
-     for c in col_values:
+     for c in sample_values:
         valid_city_check= valid_city(c)
 
         if colcheck and valid_city_check:
@@ -58,14 +64,14 @@ def valid_city(city_name):
         return False
     
     
-def remove_null(col_values):
+def remove_null(sample_values):
      null_values= ["", "NAN", "NaN","nan", "Null", None, "NA", "N/A", "na","n/a", "null", "NULL", ]
-     col_values= [elem for elem in col_values if elem not in null_values]
-     return col_values
+     sample_values= [elem for elem in sample_values if elem not in null_values]
+     return sample_values
 
-def remove_spaces(col_values):
-    col_values = [elem.strip() for elem in col_values] 
-    return col_values
+def remove_spaces(sample_values):
+    sample_values = [elem.strip() for elem in sample_values] 
+    return sample_values
 
 def remove_outliers(scores):
     outliers = set()

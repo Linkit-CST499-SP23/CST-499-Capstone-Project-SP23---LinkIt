@@ -106,7 +106,7 @@ def get_format(c):
         return False
     
 def get_api_value(c):
-    
+
     api_key = os.environ.get('OPENCAGE_API_KEY')
     geocoder = OpenCageGeocode(api_key)
     api_result=''

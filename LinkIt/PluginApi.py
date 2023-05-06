@@ -46,6 +46,7 @@ class PluginApi(object):
 
     def __init__(self):
         self.initialize_plugins()
+        print("API: plugins initialized...")
 
     def initialize_plugins(self):
         """ 
@@ -54,18 +55,19 @@ class PluginApi(object):
         """
         try:
             plugin_files = os.listdir('LinkIt/plugins/')
-            try:
-                for plugin in plugin_files:
-                    if not "__" in plugin:
-                        plug_name = plugin[:-3]
-                        self.plugin_dict[plug_name] = importlib.import_module("LinkIt.plugins." + 
-                                                                              plugin[:-3])
-            except:
-                print("error importing plugins")
+            for plugin in plugin_files:
+                if not "__" in plugin:
+                    plug_name = plugin[:-3]
+                    try:
+                        self.plugin_dict[plug_name] = importlib.import_module("." + plug_name, package="plugins")
+                    except:
+                        print("API: ++ ERROR LOADING " + plug_name + " ++")
         except:
             print("error locating plugins folder or listing contents")
-           
-            
+
+                    
+
+                  
     def plugin_confidence(self, plugin, column_name, column):
         """ 
         retrieves a confidence score from a plugin for a column of data
@@ -76,18 +78,21 @@ class PluginApi(object):
             the plugin being run on that column
         column : string[]
             the column of data being scanned
+
+        output : float
         """
         try:
             confidence_score = self.plugin_dict[plugin].get_confidence_score(column_name, column)
             return confidence_score
         except:
             print("error getting plugin_confidence score from" + str(plugin))
+            return 0.0
 
 
     def analyze_column(self, column_name, column):
         """
         Runs all plugins on a column and returns a dict with the confidence 
-        scores and plugin's names
+        scores and plugins' names
 
         TODO/FUTURE: add the ability to choose which plugins are applied
 
@@ -97,14 +102,23 @@ class PluginApi(object):
             the column of data being scanned
 
 
-        output: dict {int: string}
+        output: dict {string:int}
         """
         plugins = self.plugin_dict.keys()
         confidence_scores = {}
         for plugin in plugins:
+            # until City is fixed
+            if (plugin == "CityPlugin"):
+                continue
+            # -------------------
             confidence_score = self.plugin_confidence(plugin, column_name, column)
-            confidence_scores.update({confidence_score: plugin})
-        print(confidence_scores) #ONLY HERE FOR TESTING
+            print("--> API: " + plugin + "score: " + str(confidence_score))
+            confidence_scores.update({plugin:confidence_score})
+        
+        #print("API: '" + column_name + "' confidence scores:") # Console output for debug
+        #print(confidence_scores) # Console output for debug
+        #print("-------------------") # Console output for debug
+        
         return confidence_scores
 
 
@@ -115,7 +129,11 @@ class PluginApi(object):
 
 
     def get_plugin_list(self):
-        """ returns the keys (plugin names) of plugin_dict """
+        """ 
+        Returns the keys (plugin names) of plugin_dict 
+        
+        output: list[string]
+        """
         plugin_list = []
         for key in self.plugin_dict.keys():
             plugin_list.append(key)

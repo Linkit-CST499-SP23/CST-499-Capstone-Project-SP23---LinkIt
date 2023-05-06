@@ -1,5 +1,9 @@
 import re
-from state_city_database import us_states
+
+import sys
+sys.path.append("..")
+
+from internal_databases.state_city_database import us_states
 import statistics
 
 """
@@ -34,7 +38,6 @@ def get_confidence_score(col_name, col_values):
             scores.append(0)
 
      scores= remove_outliers(scores)
-     print(scores)
      return float(statistics.median(scores))
 
 # checks valid US state names/abberevations  from us_states.py

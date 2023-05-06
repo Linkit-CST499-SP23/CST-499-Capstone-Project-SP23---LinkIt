@@ -1,10 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\LinkIt",
-    "\\plugins",
-    "\\tests"
+    "\\documentation",
+    "\\LinkIt\\internal_databases"
   ],
-  "SelectedNode": "\\LinkIt\\main.py",
+  "SelectedNode": "\\documentation\\City Plugin Documentation.pdf",
   "PreviewInSolutionExplorer": false
 }

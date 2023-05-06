@@ -53,5 +53,5 @@ us_states = {
     "Wyoming": "WY"
 }
 
-cities_df = pd.read_csv('Linkit/plugins/us_cities.csv')
+cities_df = pd.read_csv('LinkIt/internal_databases/us_cities.csv')
 us_cities = set(cities_df['city'].str.lower())

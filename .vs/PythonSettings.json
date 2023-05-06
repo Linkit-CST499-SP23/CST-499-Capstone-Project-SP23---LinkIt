@@ -1,3 +1,4 @@
 {
-  "Interpreter": "Global|PythonCore|3.7-32"
+  "TestFramework": "unittest",
+  "Interpreter": "Global|PythonCore|3.11"
 }

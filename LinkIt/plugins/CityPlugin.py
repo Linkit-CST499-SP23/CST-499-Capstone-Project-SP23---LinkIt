@@ -1,7 +1,11 @@
-import pandas as pd
+#import pandas as pd #Andrew: temporarily commenting as it is not used
 import statistics
 from fuzzywuzzy import fuzz
-from state_city_database import us_cities
+
+import sys
+sys.path.append("..")
+
+from internal_databases.state_city_database import us_cities
 
 #US cities databease with ver 108,000 cities and towns from all 50 states
 #cities_df = pd.read_csv('plugins/us_cities.csv')
@@ -43,6 +47,7 @@ def get_confidence_score(col_name, col_values):
 
 def valid_city(city_name):
     #check match or close match from the database
+    # Andrew: checking for debug
     if any(city_name.lower() in us_cities or fuzz.token_set_ratio(x, city_name) >= 70 for x in us_cities):
         return True
     else:

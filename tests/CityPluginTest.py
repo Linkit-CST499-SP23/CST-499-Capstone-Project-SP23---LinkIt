@@ -2,7 +2,6 @@ import unittest
 
 import sys
 sys.path.append("..")
-
 from LinkIt.plugins.CityPlugin import *
 
 class TestGetConfidenceScore(unittest.TestCase):

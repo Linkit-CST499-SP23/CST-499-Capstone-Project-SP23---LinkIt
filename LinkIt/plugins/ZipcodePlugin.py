@@ -3,6 +3,7 @@ from opencage.geocoder import OpenCageGeocode
 import re
 import os 
 import statistics
+import random
 """
 The get_confidence_score() function takes in column name as a string value
 and a csv column as a list and returns a confidence score on how likely each value 
@@ -13,25 +14,13 @@ column name, format of value passed and external api
 
 input: string list, string value
 output: double 
-
-different test cases:
-
-colname maybe = "zip", "postal"
-colname right= "zip code", "postal code", "zipcode" ,"zipcode" 
-
-format right colname right- 100
-format right colname maybe - 100
-formart right colname no - check api
-format no colname right- check api
-format no colname maybe- check api
-format no col name no - 0%
-
-if colcheck_2 is true colcheck_1 will automatically be true
-if colcheck_2 is true but colckeck_1 is false - ambiguity/edge case
- 
 """
 
 def get_confidence_score(col_name, col_values):
+     if(len(col_values>50)):
+        sample_values= random.sample(col_values,50)
+     else:
+         sample_values=col_values
      
      #column name check
      colcheck_1= ("zipcode" in col_name.lower() or "zip code" in col_name.lower() or "postalcode" in col_name.lower() or "postalcode" in col_name.lower())
@@ -45,12 +34,12 @@ def get_confidence_score(col_name, col_values):
          colcheck="No"
 
      #Remove null values
-     col_values= remove_null(col_values)
+     sample_values= remove_null(sample_values)
      #Remove spaces
-     col_values= remove_spaces(col_values)
+     sample_values= remove_spaces(sample_values)
 
      scores= []
-     for c in col_values:
+     for c in sample_values:
         
         format_check, api_check= None, None
         format_check= get_format(c)
@@ -90,14 +79,14 @@ def get_confidence_score(col_name, col_values):
      else:
         return 0.0
      
-def remove_null(col_values):
+def remove_null(sample_values):
      null_values= ["", "NAN", "NaN","nan", "Null", None, "NA", "N/A", "na","n/a", "null", "NULL", ]
-     col_values= [elem for elem in col_values if elem not in null_values]
-     return col_values
+     sample_values= [elem for elem in sample_values if elem not in null_values]
+     return sample_values
 
-def remove_spaces(col_values):
-    col_values = [elem.strip() for elem in col_values] 
-    return col_values
+def remove_spaces(sample_values):
+    sample_values = [elem.strip() for elem in sample_values] 
+    return sample_values
 
 def get_format(c):
     if (re.match(r"^\d{5}$", c) is not None or re.match(r"^\d{5}-\d{4}$", c) is not None):
